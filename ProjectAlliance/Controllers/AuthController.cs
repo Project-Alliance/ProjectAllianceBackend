@@ -169,25 +169,3 @@ namespace ProjectAlliance.Controllers
 
 
 
-
-// GET api/values/5
-//[HttpGet("{id}")]
-//public IEnumerable<User> Get(User IDa)
-//{
-//    return user.Exists(IDa);
-//}
-
-// POST api/valuesa
-//// PUT api/values/5
-//[HttpPut("{id}")]
-//public void Put(int id, [FromBody] User value)
-//{
-//    user[id] = value;
-//}
-
-//// DELETE api/values/5
-//[HttpDelete("{id}")]
-//public void Delete(int id)
-//{
-//    user.RemoveAt(id);
-//}
