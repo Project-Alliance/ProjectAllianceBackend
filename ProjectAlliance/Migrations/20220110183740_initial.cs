@@ -58,7 +58,11 @@ namespace ProjectAlliance.Migrations
                     name = table.Column<string>(maxLength: 30, nullable: true),
                     password = table.Column<string>(nullable: true),
                     userName = table.Column<string>(nullable: true),
-                    email = table.Column<string>(nullable: true)
+                    email = table.Column<string>(nullable: true),
+                    profilePic = table.Column<string>(nullable: true),
+                    Lastlogin = table.Column<byte[]>(rowVersion: true, nullable: true)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.ComputedColumn),
+                    onlineStatus = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

@@ -18,6 +18,12 @@ namespace ProjectAlliance.Models
         public string userName { set; get; }
         //[Column("email", TypeName = "ntext")]
         public string email { set; get; }
+        public string profilePic { set; get; }
+        [Timestamp]
+        public byte[] Lastlogin { set; get; }
+
+        public string onlineStatus { set; get; }
+
         [ForeignKey("UserId")]
         public ICollection<Members> members { get; set; }
         [NotMapped]

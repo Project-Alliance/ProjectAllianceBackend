@@ -9,7 +9,7 @@ using ProjectAlliance.Data;
 namespace ProjectAlliance.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20220106075634_initial")]
+    [Migration("20220110183740_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,6 +123,11 @@ namespace ProjectAlliance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("Lastlogin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("varbinary(4000)");
+
                     b.Property<string>("email")
                         .HasColumnType("text");
 
@@ -130,7 +135,13 @@ namespace ProjectAlliance.Migrations
                         .HasColumnType("varchar(30)")
                         .HasMaxLength(30);
 
+                    b.Property<string>("onlineStatus")
+                        .HasColumnType("text");
+
                     b.Property<string>("password")
+                        .HasColumnType("text");
+
+                    b.Property<string>("profilePic")
                         .HasColumnType("text");
 
                     b.Property<string>("userName")

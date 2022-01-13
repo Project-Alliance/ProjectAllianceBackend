@@ -25,9 +25,7 @@ namespace ProjectAlliance.Controllers
     public class AuthController : Controller
     {
         ApiDbContext dbContext;
-        //private IJwtUtils _jwtUtils;
-        //private readonly IMapper _mapper;
-        //IConfiguration configuration;
+      
 
 
         public AuthController(ApiDbContext dbcontext) {
@@ -116,16 +114,17 @@ namespace ProjectAlliance.Controllers
                 else
                 {
                    string accessToken = generateJwtToken(user);
-                    var res = user;
-                    res.accessToken = accessToken;
+                    var res = new {
+                        id=user.id,
+                        name=user.name,
+                        email=user.email,
+                        userName=user.userName,
+                        accessToken=accessToken
+                    };
+                   
                     return Ok(res);
+
                 }
-
-                
-
-
-
-
             }
             else
             {
