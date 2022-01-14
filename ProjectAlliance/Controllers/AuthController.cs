@@ -41,7 +41,7 @@ namespace ProjectAlliance.Controllers
         };
 
 
-        [HttpGet("Login")]
+        [HttpGet("user")]
         public IEnumerable<User> Get()
         {
             return user;
