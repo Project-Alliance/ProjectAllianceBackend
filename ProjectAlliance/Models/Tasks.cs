@@ -12,7 +12,7 @@ namespace ProjectAlliance.Models
         //[Column("TaskTitle",TypeName = "ntext")]
         public string TaskTitle { get; set; }
         //[ForeignKey("pid")]
-        public Projects Pid { get; set; }
+        public int ProjectId { get; set; }
         public Tasks()
         {
         }

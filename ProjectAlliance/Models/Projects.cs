@@ -10,19 +10,20 @@ namespace ProjectAlliance.Models
     {
         [Key]
         public int pid { get; set; }
-        //[Column("PTitle",TypeName= "ntext")]
-        //[MaxLength(30)]
         public string ProjectTitle { get; set; }
-        //[Column("PDesc", TypeName = "ntext")]
         public string projectDescription { get; set; }
-        //[Column("PIconName", TypeName = "ntext")]
-        //[MaxLength(30)]
-        public string PIconName { get; set; }
-        //[Column("PIconBackground", TypeName = "ntext")]
-        //[MaxLength(20)]
-        public string PIconBackground { get; set; }
-        [ForeignKey("ProjectId")]
-        public ICollection<Members> Members { get; set; }
+        public string status { get; set; }
+        public string progress { get; set; }
+        [Timestamp]
+        public byte[] CreateAt { get; set; }
+
+        public string companyProject { get; set; }
+
+        [Timestamp]
+        public byte[] startDate { get; set; }
+        [Timestamp]
+        public byte[] endDate { get; set; }
+
         public Projects()
         {
         }

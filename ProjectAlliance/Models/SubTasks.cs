@@ -15,7 +15,7 @@ namespace ProjectAlliance.Models
         [Timestamp]
         public byte[] endDate { get; set; }        
         public string description { get; set; }
-        public virtual SubTasks Depandancy { get; set; }
+       
         public SubTasks(){}
     }
 }

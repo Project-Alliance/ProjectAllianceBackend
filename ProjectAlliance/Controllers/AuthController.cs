@@ -55,6 +55,19 @@ namespace ProjectAlliance.Controllers
             var VerifyEmail = dbContext.Users
                        .Where(s => s.email == value.email)
                        .FirstOrDefault();
+            var VerifyCompany = dbContext.Company
+                      .Where(s => s.companyName == value.companyId)
+                      .FirstOrDefault();
+            if(VerifyCompany!=null)
+            {
+                object res = new
+                {
+                    message = "Company Already Exists.",
+                };
+
+                return BadRequest(res);
+            }
+
             if (VerifyEmail != null)
             {
                 object res = new
@@ -80,12 +93,96 @@ namespace ProjectAlliance.Controllers
                 }
 
                 User user = new User();
-                user = value;
+                Company comp = new Company();
+                user.name = value.name;
+                user.email = value.email;
+                user.phone = value.phone;
+                user.userName = value.userName;
+                user.role = "admin";
                 user.password= BCryptNet.HashPassword(value.password);
-                dbContext.Users.Add(user);
-                dbContext.SaveChanges();
-                return Ok(value);
+                comp.companyName = value.companyId;
 
+                dbContext.Company.Add(comp);
+                dbContext.SaveChanges();
+                user.companyId = comp.id.ToString();
+                dbContext.Users.Add(user);
+
+                comp.createdBy = user.userName;
+                dbContext.SaveChanges();
+                
+                return Ok(user);
+
+            }
+
+
+        }
+
+
+        [HttpPost("addmembers")]
+        public IActionResult AddMembers([FromBody] User value)
+        {
+            try
+            {
+                var VerifyEmail = dbContext.Users
+                           .Where(s => s.email == value.email)
+                           .FirstOrDefault();
+                
+                
+
+                if (VerifyEmail != null)
+                {
+                    object res = new
+                    {
+                        message = "email Already Exists.",
+                    };
+
+                    return BadRequest(res);
+                }
+                else
+                {
+
+                    var VerifyUserName = dbContext.Users
+                          .Where(s => s.userName == value.userName)
+                          .FirstOrDefault();
+                    if (VerifyUserName != null)
+                    {
+                        object res = new
+                        {
+                            message = "UserName Already Exists.",
+                        };
+
+                        return BadRequest(res);
+                    }
+
+                    var comp = dbContext.Company
+                          .Where(s => s.companyName == value.company)
+                          .FirstOrDefault();
+
+                    User user = new User();
+                    
+                    user.name = value.name;
+                    user.email = value.email;
+                    user.phone = value.phone;
+                    user.userName = value.userName;
+                    user.role = "admin";
+                    user.password = BCryptNet.HashPassword(value.password);
+                    user.companyId = comp.id.ToString();
+
+
+                    dbContext.SaveChanges();
+                    
+                    dbContext.Users.Add(user);
+
+                    comp.createdBy = user.userName;
+                    dbContext.SaveChanges();
+
+                    return Ok(user);
+
+                }
+            }
+            catch(Exception ex)
+            {
+                return NotFound((message: " Server error ", Exception: ex));
             }
 
 
@@ -114,12 +211,17 @@ namespace ProjectAlliance.Controllers
                 else
                 {
                    string accessToken = generateJwtToken(user);
+
+                    var company = dbContext.Company.Where(s => s.id == Convert.ToInt16(user.companyId)).FirstOrDefault();
                     var res = new {
                         id=user.id,
                         name=user.name,
                         email=user.email,
                         userName=user.userName,
-                        accessToken=accessToken
+                        accessToken=accessToken,
+                        phone = user.phone,
+                        role = user.role,
+                        company= company.companyName,
                     };
                    
                     return Ok(res);

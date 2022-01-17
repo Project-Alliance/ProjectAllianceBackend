@@ -19,15 +19,20 @@ namespace ProjectAlliance.Models
         //[Column("email", TypeName = "ntext")]
         public string email { set; get; }
         public string profilePic { set; get; }
+        public string phone { set; get; }
+        
         [Timestamp]
         public byte[] Lastlogin { set; get; }
-
+        public string role { set; get; }
         public string onlineStatus { set; get; }
 
-        [ForeignKey("UserId")]
-        public ICollection<Members> members { get; set; }
+        public string companyId { get; set; }
+
+
         [NotMapped]
        public string accessToken { get; set; }
+        [NotMapped]
+        public string company { get; set; }
 
         public User()
         {

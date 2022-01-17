@@ -17,28 +17,22 @@ namespace ProjectAlliance.Migrations
                 .HasAnnotation("ProductVersion", "3.1.22")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("ProjectAlliance.Models.Members", b =>
+            modelBuilder.Entity("ProjectAlliance.Models.Company", b =>
                 {
-                    b.Property<int>("mid")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
+                    b.Property<string>("companyName")
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
 
-                    b.Property<string>("Role")
+                    b.Property<string>("createdBy")
                         .HasColumnType("text");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.HasKey("id");
 
-                    b.HasKey("mid");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Members");
+                    b.ToTable("Company");
                 });
 
             modelBuilder.Entity("ProjectAlliance.Models.Projects", b =>
@@ -47,16 +41,34 @@ namespace ProjectAlliance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("PIconBackground")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PIconName")
-                        .HasColumnType("text");
+                    b.Property<byte[]>("CreateAt")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("varbinary(4000)");
 
                     b.Property<string>("ProjectTitle")
                         .HasColumnType("text");
 
+                    b.Property<string>("companyProject")
+                        .HasColumnType("text");
+
+                    b.Property<byte[]>("endDate")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("varbinary(4000)");
+
+                    b.Property<string>("progress")
+                        .HasColumnType("text");
+
                     b.Property<string>("projectDescription")
+                        .HasColumnType("text");
+
+                    b.Property<byte[]>("startDate")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("varbinary(4000)");
+
+                    b.Property<string>("status")
                         .HasColumnType("text");
 
                     b.HasKey("pid");
@@ -68,9 +80,6 @@ namespace ProjectAlliance.Migrations
                 {
                     b.Property<int>("taskid")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Depandancytaskid")
                         .HasColumnType("int");
 
                     b.Property<string>("description")
@@ -91,8 +100,6 @@ namespace ProjectAlliance.Migrations
 
                     b.HasKey("taskid");
 
-                    b.HasIndex("Depandancytaskid");
-
                     b.ToTable("SubTasks");
                 });
 
@@ -102,15 +109,13 @@ namespace ProjectAlliance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<string>("TaskTitle")
                         .HasColumnType("text");
 
-                    b.Property<int?>("pid")
-                        .HasColumnType("int");
-
                     b.HasKey("tid");
-
-                    b.HasIndex("pid");
 
                     b.ToTable("Tasks");
                 });
@@ -126,6 +131,9 @@ namespace ProjectAlliance.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("varbinary(4000)");
 
+                    b.Property<string>("companyId")
+                        .HasColumnType("text");
+
                     b.Property<string>("email")
                         .HasColumnType("text");
 
@@ -139,7 +147,13 @@ namespace ProjectAlliance.Migrations
                     b.Property<string>("password")
                         .HasColumnType("text");
 
+                    b.Property<string>("phone")
+                        .HasColumnType("text");
+
                     b.Property<string>("profilePic")
+                        .HasColumnType("text");
+
+                    b.Property<string>("role")
                         .HasColumnType("text");
 
                     b.Property<string>("userName")
@@ -148,35 +162,6 @@ namespace ProjectAlliance.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("ProjectAlliance.Models.Members", b =>
-                {
-                    b.HasOne("ProjectAlliance.Models.Projects", "Pid")
-                        .WithMany("Members")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProjectAlliance.Models.User", "Uid")
-                        .WithMany("members")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ProjectAlliance.Models.SubTasks", b =>
-                {
-                    b.HasOne("ProjectAlliance.Models.SubTasks", "Depandancy")
-                        .WithMany()
-                        .HasForeignKey("Depandancytaskid");
-                });
-
-            modelBuilder.Entity("ProjectAlliance.Models.Tasks", b =>
-                {
-                    b.HasOne("ProjectAlliance.Models.Projects", "Pid")
-                        .WithMany()
-                        .HasForeignKey("pid");
                 });
 #pragma warning restore 612, 618
         }

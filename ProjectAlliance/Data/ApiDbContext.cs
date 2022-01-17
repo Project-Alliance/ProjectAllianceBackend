@@ -12,7 +12,7 @@ namespace ProjectAlliance.Data
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Projects> Projects { get; set; }
-        public DbSet<Members> Members { get; set; }
+        public DbSet<Company> Company { get; set; }
         public DbSet<SubTasks> SubTasks { get; set; }
         public DbSet<Tasks> Tasks { get; set; }
 
