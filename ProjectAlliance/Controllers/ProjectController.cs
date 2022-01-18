@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using ProjectAlliance.CQRS.Command;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,17 +14,16 @@ namespace ProjectAlliance.Controllers
     [Route("api/[controller]")]
     public class ProjectController : ApiController
     {
-        private IMediator mediator;
+        readonly private IMediator mediator;
         public ProjectController(IMediator mediator)
         {
-            mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
         // GET: api/values
-        [HttpPost]
-        public Task<ActionResult> CreateProject()
+        [HttpPost("create")]
+        public async Task<ActionResult> CreateProject([FromBody] CreateProjectCommand runOperationCommand)
         {
-
+            return CustomResponse(await mediator.Send(runOperationCommand));
         }
     }
 }

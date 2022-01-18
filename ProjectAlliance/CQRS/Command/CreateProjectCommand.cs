@@ -14,27 +14,45 @@ namespace ProjectAlliance.CQRS.Command
 {
     public class CreateProjectCommand : IRequest<object>
     {
-        public int id { set; get; }
-        public string name { set; get; }
-        public string password { set; get; }
-        public string userName { set; get; }
-        public string email { set; get; }
-        public string phone { set; get; }
-        public string role { set; get; }
-        public string onlineStatus { set; get; }
-
+        public int pid { get; set; }
+        public string ProjectTitle { get; set; }
+        public string projectDescription { get; set; }
+        public string status { get; set; }
+        public string progress { get; set; }
+        public byte[] CreateAt { get; set; }
         public string company { get; set; }
+        public byte[] startDate { get; set; }
+        public byte[] endDate { get; set; }
 
-        public class AddMemeberCommandHandler : IRequestHandler<CreateProjectCommand, object>
+        public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, object>
         {
             private ApiDbContext dbContext;
-            public AddMemeberCommandHandler(ApiDbContext context)
+            public CreateProjectCommandHandler(ApiDbContext context)
             {
                 this.dbContext = context;
             }
             public async Task<object> Handle(CreateProjectCommand command, CancellationToken cancellationToken)
             {
-                return command;
+                try
+                {
+                    var project = new Projects();
+                    project.ProjectTitle = command.ProjectTitle;
+                    project.projectDescription = command.projectDescription;
+                    project.status = command.status;
+                    project.progress = "0";
+                    project.CreateAt = BitConverter.GetBytes(DateTime.Now.ToBinary());
+                    var company = await dbContext.Company.Where(s => s.companyName == command.company).FirstOrDefaultAsync();
+                    if(company!=null)
+                        project.companyProject = company.id.ToString();
+                    project.startDate = command.startDate;
+                    project.endDate = command.endDate;
+                    dbContext.Add(project);
+                    await dbContext.SaveChangesAsync();
+                    return new { message = "successfully created project",staus=200 };
+                }
+                catch (Exception ex) {
+                    return new { message = "error "+ ex, staus = 400 };
+                }
             }
         }
     }
