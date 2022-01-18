@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ProjectAlliance.Data;
 using ProjectAlliance.Middlewares;
+using MediatR;
 
 namespace ProjectAlliance
 {
@@ -30,7 +31,10 @@ namespace ProjectAlliance
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMediatR(typeof(Startup));
+
             services.AddControllers();
+
             services.AddDbContext<ApiDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("Default")));
             //services.AddTransient<VerifySignUp>();
         }

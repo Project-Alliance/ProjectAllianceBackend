@@ -15,10 +15,20 @@
     <None Remove="AutoMapper" />
     <None Remove="JWT" />
     <None Remove="System.IdentityModel.Tokens.Jwt" />
+    <None Remove="MediatR" />
+    <None Remove="MediatR.Extensions.Microsoft.DependencyInjection" />
+    <None Remove="CQRS\" />
+    <None Remove="CQRS\Command\" />
+    <None Remove="CQRS\New Folder\" />
+    <None Remove="CQRS\Notification\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Middlewares\" />
+    <Folder Include="CQRS\" />
+    <Folder Include="CQRS\Command\" />
+    <Folder Include="CQRS\Query\" />
+    <Folder Include="CQRS\Notification\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />
@@ -30,5 +40,7 @@
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
     <PackageReference Include="AutoMapper" Version="11.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
   </ItemGroup>
 </Project>

@@ -56,7 +56,7 @@ namespace ProjectAlliance.Controllers
                        .Where(s => s.email == value.email)
                        .FirstOrDefault();
             var VerifyCompany = dbContext.Company
-                      .Where(s => s.companyName == value.companyId)
+                      .Where(s => s.companyName == value.company)
                       .FirstOrDefault();
             if(VerifyCompany!=null)
             {
@@ -163,7 +163,7 @@ namespace ProjectAlliance.Controllers
                     user.name = value.name;
                     user.email = value.email;
                     user.phone = value.phone;
-                    user.userName = value.userName;
+                    user.userName = value.userName + "@" + value.company + ".pa.com";
                     user.role = "admin";
                     user.password = BCryptNet.HashPassword(value.password);
                     user.companyId = comp.id.ToString();
