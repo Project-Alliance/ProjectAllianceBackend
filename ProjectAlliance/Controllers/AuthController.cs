@@ -63,6 +63,7 @@ namespace ProjectAlliance.Controllers
                 object res = new
                 {
                     message = "Company Already Exists.",
+                    status = 400
                 };
 
                 return BadRequest(res);
@@ -73,6 +74,7 @@ namespace ProjectAlliance.Controllers
                 object res = new
                 {
                     message = "email Already Exists.",
+                    status = 400
                 };
 
                 return BadRequest(res);
@@ -84,12 +86,13 @@ namespace ProjectAlliance.Controllers
                       .FirstOrDefault();
                 if (VerifyUserName != null)
                 {
-                    object res = new
+                    object ress = new
                     {
                         message = "UserName Already Exists.",
+                        status = 400
                     };
 
-                    return BadRequest(res);
+                    return BadRequest(ress);
                 }
 
                 User user = new User();
@@ -97,10 +100,10 @@ namespace ProjectAlliance.Controllers
                 user.name = value.name;
                 user.email = value.email;
                 user.phone = value.phone;
-                user.userName = value.userName;
+                user.userName = value.userName+"@"+value.company.ToLower()+".pa.com";
                 user.role = "admin";
                 user.password= BCryptNet.HashPassword(value.password);
-                comp.companyName = value.companyId;
+                comp.companyName = value.company;
 
                 dbContext.Company.Add(comp);
                 dbContext.SaveChanges();
@@ -109,8 +112,14 @@ namespace ProjectAlliance.Controllers
 
                 comp.createdBy = user.userName;
                 dbContext.SaveChanges();
+
+                object res = new
+                {
+                    message = "Successfull Crated your account",
+                    status=200
+                };
                 
-                return Ok(user);
+                return Ok(res);
 
             }
 
@@ -118,76 +127,7 @@ namespace ProjectAlliance.Controllers
         }
 
 
-        [HttpPost("addmembers")]
-        public IActionResult AddMembers([FromBody] User value)
-        {
-            try
-            {
-                var VerifyEmail = dbContext.Users
-                           .Where(s => s.email == value.email)
-                           .FirstOrDefault();
-                
-                
-
-                if (VerifyEmail != null)
-                {
-                    object res = new
-                    {
-                        message = "email Already Exists.",
-                    };
-
-                    return BadRequest(res);
-                }
-                else
-                {
-
-                    var VerifyUserName = dbContext.Users
-                          .Where(s => s.userName == value.userName)
-                          .FirstOrDefault();
-                    if (VerifyUserName != null)
-                    {
-                        object res = new
-                        {
-                            message = "UserName Already Exists.",
-                        };
-
-                        return BadRequest(res);
-                    }
-
-                    var comp = dbContext.Company
-                          .Where(s => s.companyName == value.company)
-                          .FirstOrDefault();
-
-                    User user = new User();
-                    
-                    user.name = value.name;
-                    user.email = value.email;
-                    user.phone = value.phone;
-                    user.userName = value.userName + "@" + value.company + ".pa.com";
-                    user.role = "admin";
-                    user.password = BCryptNet.HashPassword(value.password);
-                    user.companyId = comp.id.ToString();
-
-
-                    dbContext.SaveChanges();
-                    
-                    dbContext.Users.Add(user);
-
-                    comp.createdBy = user.userName;
-                    dbContext.SaveChanges();
-
-                    return Ok(user);
-
-                }
-            }
-            catch(Exception ex)
-            {
-                return NotFound((message: " Server error ", Exception: ex));
-            }
-
-
-        }
-
+   
         [HttpPost("signin")]
         public IActionResult Login([FromBody] User value)
         {
