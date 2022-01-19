@@ -22,6 +22,9 @@
     <None Remove="CQRS\New Folder\" />
     <None Remove="CQRS\Notification\" />
     <None Remove="FluentValidation" />
+    <None Remove="Services\" />
+    <None Remove="Azure.Storage.Blobs" />
+    <None Remove="Microsoft.Extensions.Azure" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
@@ -30,6 +33,7 @@
     <Folder Include="CQRS\Command\" />
     <Folder Include="CQRS\Query\" />
     <Folder Include="CQRS\Notification\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />
@@ -44,5 +48,7 @@
     <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="FluentValidation" Version="10.3.6" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
+    <PackageReference Include="Microsoft.Extensions.Azure" Version="1.1.1" />
   </ItemGroup>
 </Project>

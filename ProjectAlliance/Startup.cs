@@ -14,6 +14,8 @@ using Microsoft.Extensions.Logging;
 using ProjectAlliance.Data;
 using ProjectAlliance.Middlewares;
 using MediatR;
+using ProjectAlliance.Services;
+using Microsoft.Extensions.Azure;
 
 namespace ProjectAlliance
 {
@@ -31,8 +33,11 @@ namespace ProjectAlliance
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAzureClients(builder => {
+                builder.AddBlobServiceClient(Configuration.GetSection("Storage:ConnectionString").Value);
+            });
             services.AddMediatR(typeof(Startup));
-
+            services.AddTransient<StorageService, StorageService>();
             services.AddControllers();
 
             services.AddDbContext<ApiDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("Default")));
