@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectAlliance.CQRS.Command;
+using ProjectAlliance.CQRS.Query;
 
 
 
@@ -25,26 +26,21 @@ namespace ProjectAlliance.Controllers
         }
         // GET: api/values
         [HttpPost("create")]
-        public async Task<ActionResult> CreateProject([FromBody] CreateProjectCommand runOperationCommand)
+        public async Task<IActionResult> CreateProject([FromBody] CreateProjectCommand runOperationCommand)
         {
             
             return CustomResponse(await mediator.Send(runOperationCommand));
         }
 
-        //[HttpPost("upload")]
-        //public ActionResult uploadDocument(IFormFile file)
-        //{
+        [HttpGet("GetCompanyProjects/{company}")]
 
-        //    try
-        //    {
-        //        storageServices.Upload(file);
-        //        return Ok((message: "uplaoded", StatusCode: 200));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest((ex));
-        //    }
-        //}
+        public async Task<IActionResult> GetProjects(string company)
+        {
+
+            
+         return CustomResponse(await mediator.Send(new GetAllProjectsQuerry { company = company }));
+           
+        }
 
     }
 }

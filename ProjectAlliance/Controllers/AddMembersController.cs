@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ProjectAlliance.CQRS.Command;
+using ProjectAlliance.CQRS.Query;
 using ProjectAlliance.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -31,8 +32,11 @@ namespace ProjectAlliance.Controllers
             if (!ModelState.IsValid) return CustomResponse(ModelState);
             return CustomResponse(await mediator.Send(command));
         }
-
+        [HttpGet("GetCompanyEmployees/{id}")]
         
-        
+        public async Task<IActionResult> GetMembers(string id)
+        {
+            return CustomResponse(await mediator.Send(new GetMembersQuery { company = id }));
+        }  
     }
 }
