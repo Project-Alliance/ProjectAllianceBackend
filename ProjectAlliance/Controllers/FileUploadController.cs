@@ -7,26 +7,24 @@ namespace ProjectAlliance.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FileUploadController : ControllerBase
+    public class FileController : ControllerBase
     {
         private readonly IStorageService _storageService;
 
-        public FileUploadController(IStorageService storageService)
+        public FileController(IStorageService storageService)
         {
             _storageService = storageService;
         }
 
-        public IActionResult Get()
+        public ActionResult Get()
         {
             return Ok("File Upload API running...");
         }
 
         [HttpPost]
         [Route("upload")]
-        public IActionResult Upload(IFormFile file)
-        {
-            
-
+        public ActionResult Upload(IFormFile file)
+        { 
             return Ok(_storageService.Upload(file));
         }
     }

@@ -15,24 +15,24 @@ using ProjectAlliance.Models;
 namespace ProjectAlliance.Controllers
 {
     [Route("api/[controller]")]
-    public class AddMembersController : ApiController
+    public class MembersController : ApiController
     {
         //private readonly SignInManager<IdentityUser> _signInManager;
         //private readonly UserManager<IdentityUser> _userManager;
         private IMediator mediator;
-        public AddMembersController(IMediator mediatr)
+        public MembersController(IMediator mediatr)
         {
             this.mediator = mediatr;
         }
 
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> AddMember([FromBody] AddMemeberCommand command)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
             return CustomResponse(await mediator.Send(command));
         }
-        [HttpGet("GetCompanyEmployees/{id}")]
+        [HttpGet("get/{id}")]
         
         public async Task<IActionResult> GetMembers(string id)
         {

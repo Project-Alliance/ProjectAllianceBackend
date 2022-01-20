@@ -32,7 +32,7 @@ namespace ProjectAlliance.Controllers
             return CustomResponse(await mediator.Send(runOperationCommand));
         }
 
-        [HttpGet("GetCompanyProjects/{company}")]
+        [HttpGet("get/{company}")]
 
         public async Task<IActionResult> GetProjects(string company)
         {

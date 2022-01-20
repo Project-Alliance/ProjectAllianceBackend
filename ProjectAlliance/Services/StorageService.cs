@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -20,14 +21,21 @@ namespace ProjectAlliance.Services
 
         public string Upload(IFormFile formFile)
         {
-            var containerName = _configuration.GetSection("Storage:ContainerName").Value;
+            try
+            {
+                var containerName = _configuration.GetSection("Storage:ContainerName").Value;
 
-            var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
-            var blobClient = containerClient.GetBlobClient(formFile.FileName);
+                var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
+                var blobClient = containerClient.GetBlobClient(formFile.FileName);
 
-            using var stream = formFile.OpenReadStream();
-            blobClient.UploadAsync(stream, true);
-            return blobClient.Uri.ToString();
+                using var stream = formFile.OpenReadStream();
+                blobClient.Upload(stream, true);
+                return blobClient.Uri.ToString();
+            }
+            catch (Exception ex) {
+                return ex.ToString();
+            }
+           
 
         }
     }
