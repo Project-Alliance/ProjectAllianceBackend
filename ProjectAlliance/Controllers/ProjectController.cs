@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectAlliance.CQRS.Command;
-using ProjectAlliance.Services;
+
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -17,11 +17,11 @@ namespace ProjectAlliance.Controllers
     public class ProjectController : ApiController
     {
         readonly private IMediator mediator;
-        readonly private StorageService storageServices;
-        public ProjectController(IMediator mediator, StorageService _storageServices)
+        
+        public ProjectController(IMediator mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.storageServices = _storageServices;
+            
         }
         // GET: api/values
         [HttpPost("create")]
@@ -31,20 +31,20 @@ namespace ProjectAlliance.Controllers
             return CustomResponse(await mediator.Send(runOperationCommand));
         }
 
-        [HttpPost("upload")]
-        public ActionResult uploadDocument([FromBody] IFormFile runOperationCommand)
-        {
+        //[HttpPost("upload")]
+        //public ActionResult uploadDocument(IFormFile file)
+        //{
 
-            try
-            {
-                storageServices.upload(runOperationCommand);
-                return Ok((message: "uplaoded", StatusCode: 200));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest((ex));
-            }
-        }
+        //    try
+        //    {
+        //        storageServices.Upload(file);
+        //        return Ok((message: "uplaoded", StatusCode: 200));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest((ex));
+        //    }
+        //}
 
     }
 }

@@ -36,8 +36,9 @@ namespace ProjectAlliance
             services.AddAzureClients(builder => {
                 builder.AddBlobServiceClient(Configuration.GetSection("Storage:ConnectionString").Value);
             });
+            services.AddTransient<IStorageService, StorageService>();
             services.AddMediatR(typeof(Startup));
-            services.AddTransient<StorageService, StorageService>();
+            
             services.AddControllers();
 
             services.AddDbContext<ApiDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("Default")));
