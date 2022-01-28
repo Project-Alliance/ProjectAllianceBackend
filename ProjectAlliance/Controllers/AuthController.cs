@@ -135,6 +135,7 @@ namespace ProjectAlliance.Controllers
             var user = dbContext.Users
                        .Where(s => s.userName == value.userName)
                        .FirstOrDefault();
+            
             if(user != null)
             {
                 bool comparePassword = BCryptNet.Verify(value.password, user.password);
