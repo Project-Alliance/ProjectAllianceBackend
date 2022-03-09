@@ -41,10 +41,8 @@ namespace ProjectAlliance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("CreateAt")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("varbinary(4000)");
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("Date");
 
                     b.Property<string>("ProjectTitle")
                         .HasColumnType("text");
@@ -52,10 +50,8 @@ namespace ProjectAlliance.Migrations
                     b.Property<string>("companyProject")
                         .HasColumnType("text");
 
-                    b.Property<byte[]>("endDate")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("varbinary(4000)");
+                    b.Property<DateTime>("endDate")
+                        .HasColumnType("Date");
 
                     b.Property<string>("progress")
                         .HasColumnType("text");
@@ -63,10 +59,8 @@ namespace ProjectAlliance.Migrations
                     b.Property<string>("projectDescription")
                         .HasColumnType("text");
 
-                    b.Property<byte[]>("startDate")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("varbinary(4000)");
+                    b.Property<DateTime>("startDate")
+                        .HasColumnType("Date");
 
                     b.Property<string>("status")
                         .HasColumnType("text");
@@ -85,15 +79,11 @@ namespace ProjectAlliance.Migrations
                     b.Property<string>("description")
                         .HasColumnType("text");
 
-                    b.Property<byte[]>("endDate")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("varbinary(4000)");
+                    b.Property<DateTime>("endDate")
+                        .HasColumnType("Date");
 
-                    b.Property<byte[]>("startDate")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("varbinary(4000)");
+                    b.Property<DateTime>("startDate")
+                        .HasColumnType("Date");
 
                     b.Property<string>("taskTitle")
                         .HasColumnType("text");
@@ -126,10 +116,8 @@ namespace ProjectAlliance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("Lastlogin")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("varbinary(4000)");
+                    b.Property<DateTime>("Lastlogin")
+                        .HasColumnType("Date");
 
                     b.Property<string>("companyId")
                         .HasColumnType("text");

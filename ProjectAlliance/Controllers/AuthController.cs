@@ -16,6 +16,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using ProjectAlliance.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,11 +26,13 @@ namespace ProjectAlliance.Controllers
     public class AuthController : Controller
     {
         ApiDbContext dbContext;
-      
+        public readonly IJwtTokenManager _jwtTokenManager;
 
 
-        public AuthController(ApiDbContext dbcontext) {
+
+        public AuthController(ApiDbContext dbcontext, IJwtTokenManager jwtTokenManager) {
             dbContext = dbcontext;
+            _jwtTokenManager = jwtTokenManager;
             //_mapper = mapper;
         }
 
@@ -150,7 +153,7 @@ namespace ProjectAlliance.Controllers
                 }
                 else
                 {
-                   string accessToken = generateJwtToken(user);
+                    string accessToken = _jwtTokenManager.Authenticate(user.userName,user.role);
 
                     var company = dbContext.Company.Where(s => s.id == Convert.ToInt16(user.companyId)).FirstOrDefault();
                     var res = new {

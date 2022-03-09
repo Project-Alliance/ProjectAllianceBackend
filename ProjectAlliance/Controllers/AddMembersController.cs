@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ProjectAlliance.CQRS.Command;
@@ -25,13 +26,14 @@ namespace ProjectAlliance.Controllers
             this.mediator = mediatr;
         }
 
-
+        [Authorize]
         [HttpPost("create")]
         public async Task<IActionResult> AddMember([FromBody] AddMemeberCommand command)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
             return CustomResponse(await mediator.Send(command));
         }
+        [Authorize]
         [HttpGet("get/{id}")]
         
         public async Task<IActionResult> GetMembers(string id)

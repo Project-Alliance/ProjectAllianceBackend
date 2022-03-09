@@ -32,13 +32,10 @@ namespace ProjectAlliance.Migrations
                     projectDescription = table.Column<string>(nullable: true),
                     status = table.Column<string>(nullable: true),
                     progress = table.Column<string>(nullable: true),
-                    CreateAt = table.Column<byte[]>(rowVersion: true, nullable: true)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.ComputedColumn),
+                    CreateAt = table.Column<DateTime>(type: "Date", nullable: false),
                     companyProject = table.Column<string>(nullable: true),
-                    startDate = table.Column<byte[]>(rowVersion: true, nullable: true)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.ComputedColumn),
-                    endDate = table.Column<byte[]>(rowVersion: true, nullable: true)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.ComputedColumn)
+                    startDate = table.Column<DateTime>(type: "Date", nullable: false),
+                    endDate = table.Column<DateTime>(type: "Date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,10 +49,8 @@ namespace ProjectAlliance.Migrations
                     taskid = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     taskTitle = table.Column<string>(nullable: true),
-                    startDate = table.Column<byte[]>(rowVersion: true, nullable: true)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.ComputedColumn),
-                    endDate = table.Column<byte[]>(rowVersion: true, nullable: true)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.ComputedColumn),
+                    startDate = table.Column<DateTime>(type: "Date", nullable: false),
+                    endDate = table.Column<DateTime>(type: "Date", nullable: false),
                     description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -89,8 +84,7 @@ namespace ProjectAlliance.Migrations
                     email = table.Column<string>(nullable: true),
                     profilePic = table.Column<string>(nullable: true),
                     phone = table.Column<string>(nullable: true),
-                    Lastlogin = table.Column<byte[]>(rowVersion: true, nullable: true)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.ComputedColumn),
+                    Lastlogin = table.Column<DateTime>(type: "Date", nullable: false),
                     role = table.Column<string>(nullable: true),
                     onlineStatus = table.Column<string>(nullable: true),
                     companyId = table.Column<string>(nullable: true)

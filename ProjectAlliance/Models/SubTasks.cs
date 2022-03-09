@@ -10,10 +10,10 @@ namespace ProjectAlliance.Models
         [Key]
         public int taskid { get; set; }
         public string taskTitle { get; set; }
-        [Timestamp]
-        public byte[] startDate { get; set; }
-        [Timestamp]
-        public byte[] endDate { get; set; }        
+        [Column(TypeName = "Date")]
+        public DateTime startDate { get; set; }
+        [Column(TypeName = "Date")]
+        public DateTime endDate { get; set; }        
         public string description { get; set; }
        
         public SubTasks(){}

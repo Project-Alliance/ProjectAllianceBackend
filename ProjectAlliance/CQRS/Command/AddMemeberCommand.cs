@@ -38,7 +38,7 @@ namespace ProjectAlliance.CQRS.Command
                 var VerifyEmail = await dbContext.Users
                            .Where(s => s.email == command.email)
                            .FirstOrDefaultAsync();
-                Console.WriteLine(command.company);
+                
                 var getCompany = dbContext.Company
                           .Where(s => s.companyName == command.company)
                           .FirstOrDefault();
@@ -46,7 +46,7 @@ namespace ProjectAlliance.CQRS.Command
                 {
                     object res = new
                     {
-                        message = "Company Nota Exists.",
+                        message = "Company Not Exists.",
                         status = 400
                     };
 
@@ -85,7 +85,7 @@ namespace ProjectAlliance.CQRS.Command
                     user.email = command.email;
                     user.phone = command.phone;
                     user.userName = command.userName + "@" + command.company.ToLower() + ".pa.com";
-                    user.role = "employee";
+                    user.role = command.role;
                     user.password = BCryptNet.HashPassword(command.password);
                     
                     user.companyId = getCompany.id.ToString();

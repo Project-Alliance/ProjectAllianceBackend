@@ -15,9 +15,9 @@ namespace ProjectAlliance.Models
         public string email { set; get; }
         public string profilePic { set; get; }
         public string phone { set; get; }
-        
-        [Timestamp]
-        public byte[] Lastlogin { set; get; }
+
+        [Column(TypeName = "Date")]
+        public DateTime Lastlogin { set; get; }
         public string role { set; get; }
         public string onlineStatus { set; get; }
 

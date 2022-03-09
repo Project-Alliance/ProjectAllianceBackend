@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectAlliance.CQRS.Command;
@@ -25,13 +26,14 @@ namespace ProjectAlliance.Controllers
             
         }
         // GET: api/values
+        [Authorize]
         [HttpPost("create")]
         public async Task<IActionResult> CreateProject([FromBody] CreateProjectCommand runOperationCommand)
         {
             
             return CustomResponse(await mediator.Send(runOperationCommand));
         }
-
+        [Authorize]
         [HttpGet("get/{company}")]
 
         public async Task<IActionResult> GetProjects(string company)

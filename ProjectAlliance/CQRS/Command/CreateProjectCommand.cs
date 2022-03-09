@@ -19,10 +19,10 @@ namespace ProjectAlliance.CQRS.Command
         public string projectDescription { get; set; }
         public string status { get; set; }
         public string progress { get; set; }
-        public byte[] CreateAt { get; set; }
+        public DateTime CreateAt { get; set; }
         public string company { get; set; }
-        public byte[] startDate { get; set; }
-        public byte[] endDate { get; set; }
+        public DateTime startDate { get; set; }
+        public DateTime endDate { get; set; }
 
         public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, object>
         {
@@ -35,23 +35,30 @@ namespace ProjectAlliance.CQRS.Command
             {
                 try
                 {
+                    
                     var project = new Projects();
                     project.ProjectTitle = command.ProjectTitle;
                     project.projectDescription = command.projectDescription;
                     project.status = command.status;
                     project.progress = "0";
-                    project.CreateAt = BitConverter.GetBytes(DateTime.Now.ToBinary());
+                    project.CreateAt = DateTime.Now;
                     var company = await dbContext.Company.Where(s => s.companyName == command.company).FirstOrDefaultAsync();
                     if(company!=null)
+                    {
                         project.companyProject = company.id.ToString();
+                        
+                    }
+                    else{
+                        return new { message = "Company not exist", status = 404 };
+                    }
                     project.startDate = command.startDate;
                     project.endDate = command.endDate;
                     dbContext.Add(project);
                     await dbContext.SaveChangesAsync();
-                    return new { message = "successfully created project",staus=200 };
+                    return new { message = "successfully created project",status=200,project };
                 }
                 catch (Exception ex) {
-                    return new { message = "error "+ ex, staus = 400 };
+                    return new { message = "error "+ ex, status = 400 };
                 }
             }
         }

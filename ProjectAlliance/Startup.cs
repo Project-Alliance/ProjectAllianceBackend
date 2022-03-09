@@ -16,6 +16,9 @@ using ProjectAlliance.Middlewares;
 using MediatR;
 using ProjectAlliance.Services;
 using Microsoft.Extensions.Azure;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
 
 namespace ProjectAlliance
 {
@@ -40,6 +43,26 @@ namespace ProjectAlliance
             services.AddMediatR(typeof(Startup));
             
             services.AddControllers();
+            services.AddAuthentication(authOptions =>
+            {
+                authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(jwtOptions =>
+            {
+                var key = "Pakistan12@gmail.com";
+                var KeyBytes = Encoding.ASCII.GetBytes(key);
+                jwtOptions.RequireHttpsMetadata = false;
+                jwtOptions.SaveToken = true;
+                jwtOptions.TokenValidationParameters = new TokenValidationParameters
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(KeyBytes),
+                    ValidateLifetime = true,
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+            services.AddSingleton(typeof(IJwtTokenManager), typeof(JwtTokenManager));
 
             services.AddDbContext<ApiDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("Default")));
             //services.AddTransient<VerifySignUp>();
@@ -56,8 +79,9 @@ namespace ProjectAlliance
             
             app.UseRouting();
             //app.UseMiddleware<VerifySignUp>();
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
+            
             app.UseCors(x => x
               .AllowAnyOrigin()
               .AllowAnyMethod()

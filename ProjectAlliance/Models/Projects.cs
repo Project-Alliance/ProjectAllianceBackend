@@ -14,15 +14,16 @@ namespace ProjectAlliance.Models
         public string projectDescription { get; set; }
         public string status { get; set; }
         public string progress { get; set; }
-        [Timestamp]
-        public byte[] CreateAt { get; set; }
+        [Column(TypeName = "Date")]
+        
+        public DateTime CreateAt { get; set; }
 
         public string companyProject { get; set; }
+        [Column(TypeName = "Date")]
+        public DateTime startDate { get; set; }
 
-        [Timestamp]
-        public byte[] startDate { get; set; }
-        [Timestamp]
-        public byte[] endDate { get; set; }
+        [Column(TypeName = "Date")]
+        public DateTime endDate { get; set; }
 
         public Projects()
         {
