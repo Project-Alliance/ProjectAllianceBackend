@@ -52,7 +52,7 @@ namespace ProjectAlliance.Controllers
         {
             command.id = id;
 
-            return CustomResponse(await mediator.Send(command);
+            return CustomResponse(await mediator.Send(command));
         }
        
     }
