@@ -40,19 +40,21 @@ namespace ProjectAlliance.Controllers
         {
             return CustomResponse(await mediator.Send(new GetMembersQuery { company = id }));
         }
+        [Authorize]
         [HttpDelete("delete/{id}")]
 
         public async Task<IActionResult> DeleteMember(int id)
         {
             return CustomResponse(await mediator.Send(new DeleteMemeberCommand { id = id }));
         }
+        [Authorize]
         [HttpPut("update/{id}")]
 
         public async Task<IActionResult> UpdateMembers(int id,UpdateMemeberCommand command)
         {
             command.id = id;
 
-            return CustomResponse(await mediator.Send(command);
+            return CustomResponse(await mediator.Send(command));
         }
        
     }

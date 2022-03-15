@@ -37,15 +37,15 @@ namespace ProjectAlliance.CQRS.Command
                 var user = await dbContext.Users.Where(s=>s.id==command.id).FirstOrDefaultAsync();
                 if(user == null)
                 {
-                    return (message: "User Not exist", status: 200);
+                    return new { message = "User Not exist", status = 200 };
                 }
                 else
                 {
                     user.name=command.name;
                     user.role=command.role;
-                    user.phone = command.phone;
+                    //user.phone = command.phone;
                     dbContext.SaveChanges();
-                    return (message: "Successfully Updated", status: 200);
+                    return new { message= "Successfully Updated", status= 200 };
                 }
             }
         }

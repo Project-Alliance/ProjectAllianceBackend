@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using BCryptNet = BCrypt.Net.BCrypt;
 using System.Threading.Tasks;
+using ProjectAlliance.TeamTypes;
 
 namespace ProjectAlliance.CQRS.Command
 {
@@ -24,6 +25,8 @@ namespace ProjectAlliance.CQRS.Command
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
 
+        public List <TeamType> team { get; set; }
+
         public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, object>
         {
             private ApiDbContext dbContext;
@@ -35,8 +38,8 @@ namespace ProjectAlliance.CQRS.Command
             {
                 try
                 {
-                    
-                    var project = new Projects();
+                    var TEAM = new ProjectTeam();
+                    var project = new Project();
                     project.ProjectTitle = command.ProjectTitle;
                     project.projectDescription = command.projectDescription;
                     project.status = command.status;
@@ -54,6 +57,14 @@ namespace ProjectAlliance.CQRS.Command
                     project.startDate = command.startDate;
                     project.endDate = command.endDate;
                     dbContext.Add(project);
+                    await dbContext.SaveChangesAsync();
+                    foreach(var team in command.team)
+                    {
+                        TEAM.pid = project.pid;
+                        TEAM.uid = team.value;
+                        TEAM.role = team.role;
+                        dbContext.Add(TEAM);
+                    }
                     await dbContext.SaveChangesAsync();
                     return new { message = "successfully created project",status=200,project };
                 }

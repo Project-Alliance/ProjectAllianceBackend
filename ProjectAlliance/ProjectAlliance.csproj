@@ -27,6 +27,7 @@
     <None Remove="Microsoft.Extensions.Azure" />
     <None Remove="Microsoft.IdentityModel.Tokens" />
     <None Remove="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <None Remove="InterFacesTypes %28copy%29\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
@@ -34,6 +35,7 @@
     <Folder Include="CQRS\Query\" />
     <Folder Include="CQRS\Notification\" />
     <Folder Include="Services\" />
+    <Folder Include="Types\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />

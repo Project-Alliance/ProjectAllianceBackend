@@ -35,7 +35,7 @@ namespace ProjectAlliance.Migrations
                     b.ToTable("Company");
                 });
 
-            modelBuilder.Entity("ProjectAlliance.Models.Projects", b =>
+            modelBuilder.Entity("ProjectAlliance.Models.Project", b =>
                 {
                     b.Property<int>("pid")
                         .ValueGeneratedOnAdd()
@@ -70,11 +70,34 @@ namespace ProjectAlliance.Migrations
                     b.ToTable("Projects");
                 });
 
+            modelBuilder.Entity("ProjectAlliance.Models.ProjectTeam", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("pid")
+                        .HasColumnType("int");
+
+                    b.Property<string>("role")
+                        .HasColumnType("text");
+
+                    b.Property<int>("uid")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ProjectTeams");
+                });
+
             modelBuilder.Entity("ProjectAlliance.Models.SubTasks", b =>
                 {
                     b.Property<int>("taskid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("Date");
 
                     b.Property<string>("description")
                         .HasColumnType("text");
@@ -82,8 +105,14 @@ namespace ProjectAlliance.Migrations
                     b.Property<DateTime>("endDate")
                         .HasColumnType("Date");
 
+                    b.Property<string>("progress")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("startDate")
                         .HasColumnType("Date");
+
+                    b.Property<string>("status")
+                        .HasColumnType("text");
 
                     b.Property<string>("taskTitle")
                         .HasColumnType("text");
@@ -99,10 +128,31 @@ namespace ProjectAlliance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("Date");
+
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
+                    b.Property<string>("TaskCost")
+                        .HasColumnType("text");
+
                     b.Property<string>("TaskTitle")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("endDate")
+                        .HasColumnType("Date");
+
+                    b.Property<string>("progress")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("startDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("status")
                         .HasColumnType("text");
 
                     b.HasKey("tid");

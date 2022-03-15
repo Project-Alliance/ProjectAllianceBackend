@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ProjectAlliance.Models
 {
     //[Table("Projects")]
-    public class Projects
+    public class Project
     {
         [Key]
         public int pid { get; set; }
@@ -25,7 +25,7 @@ namespace ProjectAlliance.Models
         [Column(TypeName = "Date")]
         public DateTime endDate { get; set; }
 
-        public Projects()
+        public Project()
         {
         }
     }

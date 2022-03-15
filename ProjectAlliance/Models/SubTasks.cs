@@ -15,7 +15,17 @@ namespace ProjectAlliance.Models
         [Column(TypeName = "Date")]
         public DateTime endDate { get; set; }        
         public string description { get; set; }
-       
+
+        public string status { get; set; }
+        public string progress { get; set; }
+        [Column(TypeName = "Date")]
+
+        public DateTime CreateAt { get; set; }
+
+        
+
+
+
         public SubTasks(){}
     }
 }

@@ -33,16 +33,16 @@ namespace ProjectAlliance.CQRS.Command
                     {
                         dbContext.Users.Remove(DeleteMember);
                         await dbContext.SaveChangesAsync();
-                        return (message: "Deleted Successfully", status: 200);
+                        return new { message= "Deleted Successfully", status= 200 };
                     }
                     else
                     {
-                        return (message: "User not exists", status: 404);
+                        return new { message= "User not exists", status= 404 };
                     }
                 }
                 catch(Exception ex)
                 {
-                    return (message:"Badrequest\n" + ex.Message, status: 500);
+                    return new { message= "Badrequest\n" + ex.Message, status= 500};
                 }
             }
         }

@@ -4,7 +4,7 @@ using MySql.Data.EntityFrameworkCore.Metadata;
 
 namespace ProjectAlliance.Migrations
 {
-    public partial class initial : Migration
+    public partial class update : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,6 +43,21 @@ namespace ProjectAlliance.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProjectTeams",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    pid = table.Column<int>(nullable: false),
+                    uid = table.Column<int>(nullable: false),
+                    role = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectTeams", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SubTasks",
                 columns: table => new
                 {
@@ -51,7 +66,10 @@ namespace ProjectAlliance.Migrations
                     taskTitle = table.Column<string>(nullable: true),
                     startDate = table.Column<DateTime>(type: "Date", nullable: false),
                     endDate = table.Column<DateTime>(type: "Date", nullable: false),
-                    description = table.Column<string>(nullable: true)
+                    description = table.Column<string>(nullable: true),
+                    status = table.Column<string>(nullable: true),
+                    progress = table.Column<string>(nullable: true),
+                    CreateAt = table.Column<DateTime>(type: "Date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -65,7 +83,14 @@ namespace ProjectAlliance.Migrations
                     tid = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     TaskTitle = table.Column<string>(nullable: true),
-                    ProjectId = table.Column<int>(nullable: false)
+                    ProjectId = table.Column<int>(nullable: false),
+                    startDate = table.Column<DateTime>(nullable: false),
+                    endDate = table.Column<DateTime>(type: "Date", nullable: false),
+                    description = table.Column<string>(nullable: true),
+                    status = table.Column<string>(nullable: true),
+                    progress = table.Column<string>(nullable: true),
+                    CreateAt = table.Column<DateTime>(type: "Date", nullable: false),
+                    TaskCost = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -102,6 +127,9 @@ namespace ProjectAlliance.Migrations
 
             migrationBuilder.DropTable(
                 name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "ProjectTeams");
 
             migrationBuilder.DropTable(
                 name: "SubTasks");

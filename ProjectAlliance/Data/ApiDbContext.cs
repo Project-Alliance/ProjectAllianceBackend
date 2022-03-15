@@ -14,17 +14,18 @@ namespace ProjectAlliance.Data
         {
         }
         public DbSet<User> Users { get; set; }
-        public DbSet<Projects> Projects { get; set; }
+        public DbSet<Project> Projects { get; set; }
         public DbSet<Company> Company { get; set; }
         public DbSet<SubTasks> SubTasks { get; set; }
         public DbSet<Tasks> Tasks { get; set; }
-
+        public DbSet<ProjectTeam> ProjectTeams { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-           //modelBuilder.Entity<User>(e => e.Property(e => e.age).HasColumnType("tinyint(1)").HasConversion<short>());
+           //modelBuilder.Entity<ProjectTeam>(e => e.HasNoKey());
 
         }
     }

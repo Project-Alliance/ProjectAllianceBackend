@@ -17,6 +17,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using ProjectAlliance.Services;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -43,7 +44,7 @@ namespace ProjectAlliance.Controllers
            
         };
 
-
+    
         [HttpGet("user")]
         public IEnumerable<User> Get()
         {
