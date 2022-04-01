@@ -35,6 +35,52 @@ namespace ProjectAlliance.Migrations
                     b.ToTable("Company");
                 });
 
+            modelBuilder.Entity("ProjectAlliance.Models.DocumentSection", b =>
+                {
+                    b.Property<int>("sectionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("projectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("sectionDescription")
+                        .HasColumnType("text");
+
+                    b.Property<string>("sectionName")
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
+
+                    b.HasKey("sectionId");
+
+                    b.ToTable("documentSection");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.Files", b =>
+                {
+                    b.Property<int>("DocumentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<byte[]>("DataFiles")
+                        .HasColumnType("varbinary(4000)");
+
+                    b.Property<string>("FileType")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("DocumentId");
+
+                    b.ToTable("Files");
+                });
+
             modelBuilder.Entity("ProjectAlliance.Models.Project", b =>
                 {
                     b.Property<int>("pid")
@@ -68,6 +114,45 @@ namespace ProjectAlliance.Migrations
                     b.HasKey("pid");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.ProjectDocument", b =>
+                {
+                    b.Property<int>("documentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("documentDescription")
+                        .HasColumnType("text");
+
+                    b.Property<string>("documentFileExtension")
+                        .HasColumnType("text");
+
+                    b.Property<string>("documentName")
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
+
+                    b.Property<string>("documentStatus")
+                        .HasColumnType("text");
+
+                    b.Property<string>("documentVersion")
+                        .HasColumnType("text");
+
+                    b.Property<string>("filePath")
+                        .HasColumnType("text");
+
+                    b.Property<int>("projectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("sectionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("uploadBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("documentId");
+
+                    b.ToTable("projectDocument");
                 });
 
             modelBuilder.Entity("ProjectAlliance.Models.ProjectTeam", b =>

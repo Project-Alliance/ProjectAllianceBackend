@@ -19,7 +19,10 @@ namespace ProjectAlliance.Data
         public DbSet<SubTasks> SubTasks { get; set; }
         public DbSet<Tasks> Tasks { get; set; }
         public DbSet<ProjectTeam> ProjectTeams { get; set; }
-        
+
+        public DbSet<DocumentSection> documentSection { get; set; }
+        public DbSet<ProjectDocument> projectDocument { get; set; }
+        public DbSet<Files> Files { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

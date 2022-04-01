@@ -30,7 +30,6 @@ namespace ProjectAlliance.Controllers
         public readonly IJwtTokenManager _jwtTokenManager;
 
 
-
         public AuthController(ApiDbContext dbcontext, IJwtTokenManager jwtTokenManager) {
             dbContext = dbcontext;
             _jwtTokenManager = jwtTokenManager;

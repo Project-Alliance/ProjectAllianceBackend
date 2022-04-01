@@ -4,7 +4,7 @@ using MySql.Data.EntityFrameworkCore.Metadata;
 
 namespace ProjectAlliance.Migrations
 {
-    public partial class update : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,6 +20,58 @@ namespace ProjectAlliance.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Company", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "documentSection",
+                columns: table => new
+                {
+                    sectionId = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    sectionName = table.Column<string>(maxLength: 30, nullable: true),
+                    sectionDescription = table.Column<string>(nullable: true),
+                    projectId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_documentSection", x => x.sectionId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Files",
+                columns: table => new
+                {
+                    DocumentId = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 100, nullable: true),
+                    FileType = table.Column<string>(maxLength: 100, nullable: true),
+                    DataFiles = table.Column<byte[]>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Files", x => x.DocumentId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "projectDocument",
+                columns: table => new
+                {
+                    documentId = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    documentName = table.Column<string>(maxLength: 30, nullable: true),
+                    documentDescription = table.Column<string>(nullable: true),
+                    documentStatus = table.Column<string>(nullable: true),
+                    uploadBy = table.Column<string>(nullable: true),
+                    documentVersion = table.Column<string>(nullable: true),
+                    filePath = table.Column<string>(nullable: true),
+                    sectionId = table.Column<int>(nullable: false),
+                    projectId = table.Column<int>(nullable: false),
+                    documentFileExtension = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_projectDocument", x => x.documentId);
                 });
 
             migrationBuilder.CreateTable(
@@ -124,6 +176,15 @@ namespace ProjectAlliance.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Company");
+
+            migrationBuilder.DropTable(
+                name: "documentSection");
+
+            migrationBuilder.DropTable(
+                name: "Files");
+
+            migrationBuilder.DropTable(
+                name: "projectDocument");
 
             migrationBuilder.DropTable(
                 name: "Projects");
