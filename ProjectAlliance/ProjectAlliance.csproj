@@ -44,7 +44,6 @@
     <Folder Include="Middlewares\" />
     <Folder Include="CQRS\Query\" />
     <Folder Include="CQRS\Notification\" />
-    <Folder Include="Files\" />
     <Folder Include="Services\" />
     <Folder Include="Types\" />
   </ItemGroup>
