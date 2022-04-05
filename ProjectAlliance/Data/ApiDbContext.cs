@@ -23,6 +23,7 @@ namespace ProjectAlliance.Data
         public DbSet<DocumentSection> documentSection { get; set; }
         public DbSet<ProjectDocument> projectDocument { get; set; }
         public DbSet<Files> Files { get; set; }
+        public DbSet<Goals> Goals { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

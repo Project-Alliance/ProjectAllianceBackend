@@ -54,6 +54,23 @@ namespace ProjectAlliance.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Goals",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    goalName = table.Column<string>(maxLength: 30, nullable: true),
+                    goalDescription = table.Column<string>(nullable: true),
+                    statingDate = table.Column<DateTime>(nullable: false),
+                    endingDate = table.Column<DateTime>(nullable: false),
+                    companyId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Goals", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "projectDocument",
                 columns: table => new
                 {
@@ -182,6 +199,9 @@ namespace ProjectAlliance.Migrations
 
             migrationBuilder.DropTable(
                 name: "Files");
+
+            migrationBuilder.DropTable(
+                name: "Goals");
 
             migrationBuilder.DropTable(
                 name: "projectDocument");

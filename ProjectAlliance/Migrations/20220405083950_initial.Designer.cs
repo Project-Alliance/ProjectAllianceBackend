@@ -9,7 +9,7 @@ using ProjectAlliance.Data;
 namespace ProjectAlliance.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20220401063933_initial")]
+    [Migration("20220405083950_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,6 +81,33 @@ namespace ProjectAlliance.Migrations
                     b.HasKey("DocumentId");
 
                     b.ToTable("Files");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.Goals", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("companyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("endingDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("goalDescription")
+                        .HasColumnType("text");
+
+                    b.Property<string>("goalName")
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
+
+                    b.Property<DateTime>("statingDate")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Goals");
                 });
 
             modelBuilder.Entity("ProjectAlliance.Models.Project", b =>

@@ -57,6 +57,24 @@ namespace ProjectAlliance.Controllers
             });
 
         }
+
+        [Authorize]
+        [HttpDelete("deleteSection/{id}")]
+        public  IActionResult deleteSection(int id)
+        {
+            var section = dbContext.documentSection.SingleOrDefault(s=>s.sectionId==id);
+            if(section!=null)
+            {
+                var document = dbContext.projectDocument.Where(s => s.sectionId == id).ToList();
+                dbContext.projectDocument.RemoveRange(document);
+                dbContext.documentSection.Remove(section);
+                dbContext.SaveChanges();
+                return Ok(new { message = "Deleted Successfully" });
+            }else
+            {
+                return BadRequest(new { meassage = "Record Not Found" });
+            }
+        }
         //file will save into database
         [Authorize]
         [Route("files")]
@@ -115,9 +133,9 @@ namespace ProjectAlliance.Controllers
                     //Getting file Extension
                     var fileExtension = Path.GetExtension(fileName);
                     // concatenating  FileName + FileExtension
-                    var newFileName = String.Concat(Convert.ToString(Guid.NewGuid()), fileExtension);
+                    var newFileName = String.Concat(Convert.ToString(Guid.NewGuid()),"Files", fileExtension);
 
-                    filePath = Path.Combine(_configuration["StoredFilesPath"],
+                    filePath = Path.Combine(Directory.GetCurrentDirectory(),
                         newFileName);
 
                     using (Stream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
@@ -133,7 +151,7 @@ namespace ProjectAlliance.Controllers
         }
         [Authorize]
         [HttpPost("saveDocumentToDatabase")]
-        public async Task<IActionResult> SaveDocumentInformation([FromBody] ProjectDocument value)
+        public async Task<IActionResult> SaveDocumentInformation([FromForm] ProjectDocument value)
         {
             if (value == null)
             {
@@ -143,12 +161,39 @@ namespace ProjectAlliance.Controllers
             document.documentName = value.documentName;
             document.sectionId = value.sectionId;
             document.projectId=value.projectId;
-            document.documentFileExtension=value.documentFileExtension;
+         
             document.documentDescription=value.documentDescription;
-            document.filePath = value.filePath;
+            
             document.uploadBy=value.uploadBy;
             document.documentVersion=value.documentVersion;
             document.documentStatus = value.documentStatus;
+
+
+            // Getting Image
+            var file = value.file;
+
+            // Saving Image on Server
+            if (file.Length > 0)
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", file.FileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+
+                    file.CopyTo(fileStream);
+                }
+                document.documentFileExtension = Path.GetExtension(file.FileName); ;
+                document.filePath = filePath;
+                
+            }
+            else
+            {
+                return BadRequest("File Not Uploaded to server");
+            }
+
+          
+
+
+
             await dbContext.projectDocument.AddAsync(document);
             dbContext.SaveChanges();
             return Ok(new
@@ -157,6 +202,39 @@ namespace ProjectAlliance.Controllers
             });
 
         }
+
+
+
+
+
+        [Authorize]
+        [HttpPost("saveDocumentandData")]
+        public  IActionResult saveDocumentandData([FromForm] IFormFile Image)
+        {
+            // Getting Name
+            
+
+            // Getting Image
+            var image = Image;
+
+            // Saving Image on Server
+            if (image.Length > 0)
+            { var filePath = Path.Combine(Directory.GetCurrentDirectory(),"Files", image.FileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                   
+                    image.CopyTo(fileStream);
+                }
+                return Ok(new { status = true, message = "Student Posted Successfully", path = filePath });
+            }
+
+            return BadRequest();
+
+        }
+
+
+
+
         [Authorize]
         [HttpGet("GetDocument/{pid}")]
         public async Task<IActionResult> GetDocumentInformation(int pid)
@@ -177,7 +255,8 @@ namespace ProjectAlliance.Controllers
                     sectionName = document.sectionName,
                     sectionDescription = document.sectionDescription,
                     projectId = document.projectId,
-                    documents = doc
+                    documents = doc,
+                    
                 };
                 list.Add(obj);
             }

@@ -23,7 +23,9 @@ namespace ProjectAlliance.Models
         public int sectionId { set; get; }
         public int projectId { set; get; }
         public string documentFileExtension { set; get; }
- 
+
+        [NotMapped]
+        public IFormFile file { set; get; }
     }
 }
 
