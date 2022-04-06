@@ -41,7 +41,7 @@ namespace ProjectAlliance
             });
             services.AddTransient<IStorageService, StorageService>();
             services.AddMediatR(typeof(Startup));
-            
+
             services.AddControllers();
             services.AddAuthentication(authOptions =>
             {

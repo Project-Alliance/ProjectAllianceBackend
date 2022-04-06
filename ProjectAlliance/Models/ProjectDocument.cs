@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 
 namespace ProjectAlliance.Models
 {
- 
+
     public class ProjectDocument
     {
         [Key]
@@ -26,6 +27,7 @@ namespace ProjectAlliance.Models
 
         [NotMapped]
         public IFormFile file { set; get; }
+
     }
 }
 

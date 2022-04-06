@@ -15,6 +15,9 @@ using System.Web;
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using ProjectAlliance.Services;
+using System.Net.Http;
+using System.Net;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ProjectAlliance.Controllers
@@ -26,7 +29,8 @@ namespace ProjectAlliance.Controllers
         ApiDbContext dbContext;
         public IConfiguration Configuration { get; }
         private readonly IConfiguration _configuration;
-
+        private FileServices fileServices;
+            
 
 
 
@@ -34,6 +38,7 @@ namespace ProjectAlliance.Controllers
         {
             dbContext = dbcontext;
             _configuration = configuration;
+            fileServices = new FileServices();
 
 
         }
@@ -115,39 +120,23 @@ namespace ProjectAlliance.Controllers
         }
 
         //file will save to physical location
-        [Authorize]
-        [Route("SaveDocument")]
-        [HttpPost]
-
-        public async Task<IActionResult> OnPostUploadAsync(IFormFile formFile)
+       
+        [HttpGet]
+        [Route("FileAPI/{fileName}")]
+        public async Task<IActionResult> Download(string filename)
         {
-            if (formFile == null)
-                return BadRequest(new { message = "Please select A document", status = 400 });
-            long size = formFile.Length;
-            string filePath="";
+            if (filename == null)
+                return Content("filename is not availble");
 
-            
-                 
-                    //Getting FileName
-                    var fileName = Path.GetFileName(formFile.FileName);
-                    //Getting file Extension
-                    var fileExtension = Path.GetExtension(fileName);
-                    // concatenating  FileName + FileExtension
-                    var newFileName = String.Concat(Convert.ToString(Guid.NewGuid()),"Files", fileExtension);
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", filename);
 
-                    filePath = Path.Combine(Directory.GetCurrentDirectory(),
-                        newFileName);
-
-                    using (Stream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-                    {
-                        await formFile.CopyToAsync(fileStream);
-                    }
-                 
-           
-            // Process uploaded filesx
-            // Don't rely on or trust the FileName property without validation.
-
-            return Ok(new { size, path = filePath, fileName, fileExtension });
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            return File(memory, fileServices.GetContentType(path), Path.GetFileName(path));
         }
         [Authorize]
         [HttpPost("saveDocumentToDatabase")]
@@ -172,22 +161,29 @@ namespace ProjectAlliance.Controllers
             // Getting Image
             var file = value.file;
 
+            //Getting FileName
+            var fileName = Path.GetFileName(file.FileName);
+            //Getting file Extension
+            var fileExtension = Path.GetExtension(fileName);
+            // concatenating  FileName + FileExtension
+            var newFileName = String.Concat(Convert.ToString(Guid.NewGuid()), "Files", fileExtension);
+
             // Saving Image on Server
             if (file.Length > 0)
             {
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", file.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", newFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
 
                     file.CopyTo(fileStream);
                 }
-                document.documentFileExtension = Path.GetExtension(file.FileName); ;
-                document.filePath = filePath;
+                document.documentFileExtension = fileExtension;
+                document.filePath = newFileName;
                 
             }
             else
             {
-                return BadRequest("File Not Uploaded to server");
+                return BadRequest(new { message= "File Not Uploaded to server", value });
             }
 
           
@@ -202,52 +198,37 @@ namespace ProjectAlliance.Controllers
             });
 
         }
-
-
-
-
-
-        [Authorize]
-        [HttpPost("saveDocumentandData")]
-        public  IActionResult saveDocumentandData([FromForm] IFormFile Image)
-        {
-            // Getting Name
-            
-
-            // Getting Image
-            var image = Image;
-
-            // Saving Image on Server
-            if (image.Length > 0)
-            { var filePath = Path.Combine(Directory.GetCurrentDirectory(),"Files", image.FileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                   
-                    image.CopyTo(fileStream);
-                }
-                return Ok(new { status = true, message = "Student Posted Successfully", path = filePath });
-            }
-
-            return BadRequest();
-
-        }
-
-
-
-
         [Authorize]
         [HttpGet("GetDocument/{pid}")]
-        public async Task<IActionResult> GetDocumentInformation(int pid)
+        public async Task<ActionResult> GetDocumentInformation(int pid)
         {
             List<object> list = new List<object>();
             var documentSection=dbContext.documentSection.Where(s=>s.projectId==pid).ToListAsync();
-            foreach(var document in await documentSection)
+            foreach (var document in await documentSection)
             {
                 var Documents = dbContext.projectDocument.Where(s => s.projectId == pid && s.sectionId == document.sectionId).ToListAsync();
-                List<ProjectDocument> doc = new List<ProjectDocument>();
+                List<object> doc = new List<object>();
                 foreach (var DOC in await Documents)
                 {
-                    doc.Add(DOC);
+                    if (DOC.filePath == null)
+                        return Content("filename is not availble");
+                    var user = dbContext.Users.SingleOrDefault(s=>s.id== Convert.ToInt32(DOC.uploadBy));
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", DOC.filePath);
+                    object documentObject = new {
+                         documentName=DOC.documentName,
+                         documentDescription=DOC.documentDescription,
+                        documentStatus=DOC.documentStatus,
+                         uploadBy=user.name,
+                        uploadById = user.id,
+                        documentVersion =DOC.documentVersion,
+                        filePath= "http://localhost:5000/api/Document/FileAPI/"+DOC.filePath,
+                        sectionId=DOC.sectionId,
+                         projectId=DOC.projectId,
+                        documentId=DOC.documentId,
+                        documentFileExtension =DOC.documentFileExtension,
+                        file= path
+                    };
+                    doc.Add(documentObject);
                 }
                 var obj = new
                 {
@@ -260,21 +241,42 @@ namespace ProjectAlliance.Controllers
                 };
                 list.Add(obj);
             }
+            
             return Ok(list);
         }
 
-        
+        [Authorize]
+        [HttpDelete("DeleteDocument/{documentId}")]
+        public async Task<IActionResult> DeleteDocument(int documentId)
+        {
+            var document = dbContext.projectDocument.SingleOrDefault(s => s.documentId == documentId);
+            if(document!=null)
+            {
+                dbContext.projectDocument.Remove(document);
+                await dbContext.SaveChangesAsync();
+                return Ok(new { message = "Deleted Document" });
+            }
+            return BadRequest(new { message = "Deleted Not Found" });
+        }
+
+        [Authorize]
+        [HttpPut("UpdateDocument/{documentId}")]
+        public async Task<IActionResult> UpdateDocument(int documentId, [FromBody] ProjectDocument document)
+        {
+            var Doc = dbContext.projectDocument.SingleOrDefault(s => s.documentId == documentId);
+           if(Doc!=null)
+            {
+                Doc.documentName = document.documentName;
+                Doc.documentStatus = document.documentStatus;
+                dbContext.projectDocument.Update(Doc);
+                await dbContext.SaveChangesAsync();
+                return Ok(new { message = "Document Update" });
+            }
+            return BadRequest(new { message = "Deleted Not Found" });
+        }
 
     }
-    public interface ReturnSectonType
-    {
-        
-        public int sectionId { set; get; }
-        public string sectionName { set; get; }
-        public string sectionDescription { set; get; }
-        public int projectId { set; get; }
-        
 
-    }
+
 }
 
