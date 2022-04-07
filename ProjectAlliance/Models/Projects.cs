@@ -25,6 +25,8 @@ namespace ProjectAlliance.Models
         [Column(TypeName = "Date")]
         public DateTime endDate { get; set; }
 
+        public ICollection<ProjectSchedule> projectSchedules { get; set; }
+
         public Project()
         {
         }

@@ -24,7 +24,7 @@ namespace ProjectAlliance.Data
         public DbSet<ProjectDocument> projectDocument { get; set; }
         public DbSet<Files> Files { get; set; }
         public DbSet<Goals> Goals { get; set; }
-
+        public DbSet<ProjectSchedule> Schedule { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -187,6 +187,36 @@ namespace ProjectAlliance.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Schedule",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    name = table.Column<string>(maxLength: 8, nullable: false),
+                    start = table.Column<DateTime>(nullable: false),
+                    end = table.Column<DateTime>(nullable: false),
+                    dependancies = table.Column<string>(nullable: true),
+                    AssignTo = table.Column<int>(nullable: false),
+                    progress = table.Column<int>(nullable: false),
+                    ProjectId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Schedule", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Schedule_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "pid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Schedule_ProjectId",
+                table: "Schedule",
+                column: "ProjectId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -207,10 +237,10 @@ namespace ProjectAlliance.Migrations
                 name: "projectDocument");
 
             migrationBuilder.DropTable(
-                name: "Projects");
+                name: "ProjectTeams");
 
             migrationBuilder.DropTable(
-                name: "ProjectTeams");
+                name: "Schedule");
 
             migrationBuilder.DropTable(
                 name: "SubTasks");
@@ -220,6 +250,9 @@ namespace ProjectAlliance.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Projects");
         }
     }
 }

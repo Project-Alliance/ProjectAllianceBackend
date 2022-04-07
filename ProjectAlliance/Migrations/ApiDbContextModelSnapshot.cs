@@ -182,6 +182,42 @@ namespace ProjectAlliance.Migrations
                     b.ToTable("projectDocument");
                 });
 
+            modelBuilder.Entity("ProjectAlliance.Models.ProjectSchedule", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AssignTo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("dependancies")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("end")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("varchar(8)")
+                        .HasMaxLength(8);
+
+                    b.Property<int>("progress")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("start")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Schedule");
+                });
+
             modelBuilder.Entity("ProjectAlliance.Models.ProjectTeam", b =>
                 {
                     b.Property<int>("id")
@@ -312,6 +348,15 @@ namespace ProjectAlliance.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.ProjectSchedule", b =>
+                {
+                    b.HasOne("ProjectAlliance.Models.Project", "pid")
+                        .WithMany("projectSchedules")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
