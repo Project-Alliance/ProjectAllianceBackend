@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,11 +27,24 @@ namespace ProjectAlliance.CQRS.Query
                 {
                 try
                 {
+                    List<object> data = new List<object>();
+
                     var company = await dbContext.Company.Where(s => s.companyName == query.company).FirstOrDefaultAsync();
                     if (company != null) {
                         var members = await dbContext.Users.Where(s => s.companyId == company.id.ToString()).ToListAsync();
-                        Console.WriteLine(members.ToString());
-                        return new { status = 200, members };
+
+                        foreach(var member in members)
+                        {
+                            object obj = new {
+                                id=member.id,
+                                name=member.name,
+                                email=member.email,
+                                role=member.role
+
+                            };
+                            data.Add(obj);
+                        }
+                        return new { status = 200, members=data };
                     }
                     else
                     {
