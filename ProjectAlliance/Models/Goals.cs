@@ -12,8 +12,10 @@ namespace ProjectAlliance.Models
         [MaxLength(30)]
         public string goalName { set; get; }
         public string goalDescription { set; get; }
-        public DateTime statingDate { set; get; }
-        public DateTime endingDate { set; get; }
+        [Column(TypeName = "Date")]
+        public DateTime startDate { set; get; }
+        [Column(TypeName = "Date")]
+        public DateTime endDate { set; get; }
         public int companyId { set; get; }
 
         [NotMapped]

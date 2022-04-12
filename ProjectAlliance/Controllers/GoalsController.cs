@@ -62,8 +62,8 @@ namespace ProjectAlliance.Controllers
                 Goals goals = new Goals();
                 goals.goalName = value.goalName;
                 goals.goalDescription = value.goalDescription;
-                goals.statingDate = value.statingDate;
-                goals.endingDate = value.endingDate;
+                goals.startDate = value.startDate;
+                goals.endDate = value.endDate;
                 goals.companyId = org.id;
                 dbContext.Goals.Add(goals);
                 await dbContext.SaveChangesAsync();
@@ -81,8 +81,8 @@ namespace ProjectAlliance.Controllers
             {
                 goals.goalName = value.goalName;
                 goals.goalDescription = value.goalDescription;
-                goals.statingDate = value.statingDate;
-                goals.endingDate = value.endingDate;
+                goals.startDate = value.startDate;
+                goals.endDate = value.endDate;
                 dbContext.Goals.Update(goals);
                 await dbContext.SaveChangesAsync();
                 return Ok(new { message = "goals Update Successfully", goal = goals });
