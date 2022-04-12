@@ -31,10 +31,15 @@ namespace ProjectAlliance.Controllers
 
         // GET api/values/5
         [Authorize]
-        [HttpGet("get/{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("get/{name}")]
+        public async Task<IActionResult> Get(string name)
         {
-            var goals = await dbContext.Goals.Where(s => s.companyId == id).ToListAsync();
+            var company = await dbContext.Company.SingleOrDefaultAsync(s => s.companyName == name);
+            if(company==null)
+            {
+                return NotFound(new { message = "organization Not Found" });
+            }
+            var goals = await dbContext.Goals.Where(s => s.companyId == company.id).ToListAsync();
             if (goals != null)
             {
                 return Ok(goals);
@@ -50,7 +55,8 @@ namespace ProjectAlliance.Controllers
             {
                 return BadRequest(new { message="Some Thing Went Wrong"});
             }
-            var org = dbContext.Company.SingleOrDefault(s => s.id == value.companyId);
+
+            var org = dbContext.Company.SingleOrDefault(s => s.companyName == value.companyName);
             if (org!=null)
             {
                 Goals goals = new Goals();

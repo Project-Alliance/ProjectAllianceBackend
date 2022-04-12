@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectAlliance.Models
 {
@@ -14,6 +15,9 @@ namespace ProjectAlliance.Models
         public DateTime statingDate { set; get; }
         public DateTime endingDate { set; get; }
         public int companyId { set; get; }
+
+        [NotMapped]
+        public string companyName { get; set; }
 
         public Goals()
         {
