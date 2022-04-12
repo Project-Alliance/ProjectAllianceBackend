@@ -9,7 +9,7 @@ using ProjectAlliance.Data;
 namespace ProjectAlliance.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20220407175347_initial")]
+    [Migration("20220412104419_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,8 +92,8 @@ namespace ProjectAlliance.Migrations
                     b.Property<int>("companyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("endingDate")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("endDate")
+                        .HasColumnType("Date");
 
                     b.Property<string>("goalDescription")
                         .HasColumnType("text");
@@ -102,8 +102,8 @@ namespace ProjectAlliance.Migrations
                         .HasColumnType("varchar(30)")
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("statingDate")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("startDate")
+                        .HasColumnType("Date");
 
                     b.HasKey("id");
 
@@ -204,8 +204,8 @@ namespace ProjectAlliance.Migrations
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasColumnType("varchar(8)")
-                        .HasMaxLength(8);
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<int>("progress")
                         .HasColumnType("int");

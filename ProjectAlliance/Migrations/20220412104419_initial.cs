@@ -61,8 +61,8 @@ namespace ProjectAlliance.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     goalName = table.Column<string>(maxLength: 30, nullable: true),
                     goalDescription = table.Column<string>(nullable: true),
-                    statingDate = table.Column<DateTime>(nullable: false),
-                    endingDate = table.Column<DateTime>(nullable: false),
+                    startDate = table.Column<DateTime>(type: "Date", nullable: false),
+                    endDate = table.Column<DateTime>(type: "Date", nullable: false),
                     companyId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -194,7 +194,7 @@ namespace ProjectAlliance.Migrations
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    name = table.Column<string>(maxLength: 8, nullable: false),
+                    name = table.Column<string>(maxLength: 30, nullable: false),
                     start = table.Column<DateTime>(nullable: false),
                     end = table.Column<DateTime>(nullable: false),
                     dependancies = table.Column<string>(nullable: true),
