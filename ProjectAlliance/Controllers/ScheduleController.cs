@@ -33,6 +33,7 @@ namespace ProjectAlliance.Controllers
                 {
                     var user = dbContext.Users.SingleOrDefault(s => s.id == Schedule.AssignTo);
 
+                    Schedule.dependencies = Schedule.dependancies;
 
                     Schedule.assigedTo = new
                     {
@@ -52,10 +53,7 @@ namespace ProjectAlliance.Controllers
         [HttpPost("create/{pid}")]
         public async Task<IActionResult> Post(int pid,[FromBody] ProjectSchedule value)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+           
             var project = dbContext.Projects.SingleOrDefault(s => s.pid == pid);
             if(project!=null)
             {

@@ -18,6 +18,7 @@ namespace ProjectAlliance.Models
         [DataType(DataType.DateTime)]
         public DateTime end { get; set; }
         public string dependancies { get; set; }
+        
         public int AssignTo { get; set; }
         public int progress { get; set; }
         [ForeignKey("Standard")]
@@ -25,6 +26,8 @@ namespace ProjectAlliance.Models
         public Project pid { get; set; }
         [NotMapped]
         public object assigedTo { get; set; }
+        [NotMapped]
+        public string dependencies { get; set; }
 
         public ProjectSchedule()
         {
