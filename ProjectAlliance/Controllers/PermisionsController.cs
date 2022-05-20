@@ -75,21 +75,35 @@ namespace ProjectAlliance.Controllers
 
         // POST api/values
         [Authorize]
-        [HttpPut("{id}")]
-        public object Post(int id,[FromBody] List<Permisions> value)
+        [HttpPut]
+        public object Post([FromBody] List<Permisions> value)
         {
-            var permisionList = dbContext.permisions.Where(s => s.userId == Convert.ToInt16(id)).ToList();
-            if (permisionList != null)
-            {
-                dbContext.permisions.UpdateRange(value);
+           
+           
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            // Gets list of claims.
+            IEnumerable<Claim> claim = identity.Claims;
+            string userId = _jwtTokenManager.getUserId(claim);
+            var checkPermisions=dbContext.permisions.Where(s=>s.userId==Convert.ToInt16(userId)&&(s.permisionTitle=="superUser"||s.permisionTitle=="managePermisions")).SingleOrDefault();
+            if(!checkPermisions.update)
+                return Ok(new { meassage = "Not allowed to update" });  
+           foreach (var item in value)
+                {
+                    var PERMISION = dbContext.permisions.Where(s => s.permisionId == item.permisionId).FirstOrDefault();
+                    if (PERMISION != null)
+                    {
+                        PERMISION.read = item.read;
+                        PERMISION.update = item.update;
+                        PERMISION.Delete = item.Delete;
+                        PERMISION.create = item.create;
+                        dbContext.permisions.Update(PERMISION);
+                    }
+                    
+                }
                 dbContext.SaveChanges();
                 return Ok(new { meassage = "successfully updated permisions", data = value });
-            }
-            else{
-                dbContext.permisions.AddRange(value);
-                dbContext.SaveChanges();
-                return Ok(new { meassage = "successfully added permisions", data = value });
-            }
+           
             
 
         }
@@ -106,7 +120,7 @@ namespace ProjectAlliance.Controllers
                     permision.update = true;
                     permision.userId = id;
                     permision.permisionTitle = permision.permisionTitle;
-                    dbContext.permisions.Add(permision);
+                    dbContext.permisions.Update(permision);
 
                 }
                 dbContext.SaveChanges();
@@ -120,7 +134,7 @@ namespace ProjectAlliance.Controllers
                     permision.update = false;
                     permision.userId = id;
                     permision.permisionTitle = permision.permisionTitle;
-                    dbContext.permisions.Add(permision);
+                    dbContext.permisions.Update(permision);
 
                 }
                 dbContext.SaveChanges();

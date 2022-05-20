@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ using ProjectAlliance.CQRS.Command;
 using ProjectAlliance.CQRS.Query;
 using ProjectAlliance.Data;
 using ProjectAlliance.Models;
+using ProjectAlliance.Services;
 
 
 
@@ -23,10 +25,12 @@ namespace ProjectAlliance.Controllers
     {
         readonly private IMediator mediator;
         readonly private ApiDbContext dbContext;
+        public readonly IJwtTokenManager _jwtTokenManage;
 
-        public ProjectController(IMediator mediator, ApiDbContext _dbContext)
+        public ProjectController(IMediator mediator, ApiDbContext _dbContext,IJwtTokenManager _jwtTokenManage)
         {
             dbContext = _dbContext;
+            this._jwtTokenManage = _jwtTokenManage;
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             
         }
@@ -35,8 +39,22 @@ namespace ProjectAlliance.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateProject([FromBody] CreateProjectCommand runOperationCommand)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IEnumerable<Claim> claim = identity.Claims;
+            string userId = _jwtTokenManage.getUserId(claim);
+            if (userId != null)
+            {
+                var permision = dbContext.permisions.Where(s => s.userId == Convert.ToInt16(userId) && (s.permisionTitle == "superUser" || s.permisionTitle == "manageProjects")).SingleOrDefault();
+                if (permision != null && permision.create)
+                {
+                    if (!ModelState.IsValid) return CustomResponse(ModelState);
+                    return CustomResponse(await mediator.Send(runOperationCommand));
+                }
+                else return BadRequest(new { message = "You have not permision to do this add members" });
+            }
+            else
+                return BadRequest("unauthroized user");
             
-            return CustomResponse(await mediator.Send(runOperationCommand));
         }
         [Authorize]
         [HttpGet("get/{company}")]
@@ -44,9 +62,22 @@ namespace ProjectAlliance.Controllers
         public async Task<IActionResult> GetProjects(string company)
         {
 
-            
-         return CustomResponse(await mediator.Send(new GetAllProjectsQuerry { company = company }));
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        IEnumerable<Claim> claim = identity.Claims;
+        string userId = _jwtTokenManage.getUserId(claim);
+        if (userId != null)
+        {
+            var permision = dbContext.permisions.Where(s => s.userId == Convert.ToInt16(userId) && (s.permisionTitle == "superUser" || s.permisionTitle == "manageProjects")).SingleOrDefault();
+            if (permision != null && permision.read)
+            {
+                if (!ModelState.IsValid) return CustomResponse(ModelState);
+                 return CustomResponse(await mediator.Send(new GetAllProjectsQuerry { company = company }));
+            }
+            else return BadRequest(new { message = "You have not permision to do this add members" });
+        
            
+        }
+         return BadRequest("unauthroized user");
         }
 
         [Authorize]
@@ -85,7 +116,7 @@ namespace ProjectAlliance.Controllers
             }
             else
             {
-                return BadRequest(new { message="NO Member Found Please Add member to you team" });
+                return BadRequest(new { message="NO Member Found Please Add member in your team" });
             }
 
         }
