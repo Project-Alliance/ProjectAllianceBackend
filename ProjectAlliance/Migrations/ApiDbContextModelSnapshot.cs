@@ -108,6 +108,35 @@ namespace ProjectAlliance.Migrations
                     b.ToTable("Goals");
                 });
 
+            modelBuilder.Entity("ProjectAlliance.Models.Permisions", b =>
+                {
+                    b.Property<int>("permisionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Delete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("create")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("permisionTitle")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("read")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("update")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("permisionId");
+
+                    b.ToTable("permisions");
+                });
+
             modelBuilder.Entity("ProjectAlliance.Models.Project", b =>
                 {
                     b.Property<int>("pid")

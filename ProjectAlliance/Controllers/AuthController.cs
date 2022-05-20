@@ -114,7 +114,18 @@ namespace ProjectAlliance.Controllers
                 dbContext.Users.Add(user);
 
                 comp.createdBy = user.userName;
+
                 dbContext.SaveChanges();
+                Permisions userPermision = new Permisions();
+                userPermision.permisionTitle = "superUser";
+                userPermision.create = true;
+                userPermision.update = true;
+                userPermision.Delete = true;
+                userPermision.read = true;
+                userPermision.userId = user.id;
+                dbContext.permisions.Add(userPermision);
+                dbContext.SaveChanges();
+
 
                 object res = new
                 {
@@ -154,9 +165,11 @@ namespace ProjectAlliance.Controllers
                 }
                 else
                 {
-                    string accessToken = _jwtTokenManager.Authenticate(user.userName,user.role);
+                    string accessToken = _jwtTokenManager.Authenticate(user.userName,user.id,user.role);
 
                     var company = dbContext.Company.Where(s => s.id == Convert.ToInt16(user.companyId)).FirstOrDefault();
+                    var Permisions = dbContext.permisions.Where(s => s.userId == user.id).ToList();
+
                     var res = new {
                         id=user.id,
                         name=user.name,
@@ -166,6 +179,7 @@ namespace ProjectAlliance.Controllers
                         phone = user.phone,
                         role = user.role,
                         company= company.companyName,
+                        permisions=Permisions
                     };
                    
                     return Ok(res);

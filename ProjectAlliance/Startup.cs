@@ -47,7 +47,8 @@ namespace ProjectAlliance
             {
                 authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(jwtOptions =>
+            })
+                .AddJwtBearer(jwtOptions =>
             {
                 var key = "Pakistan12@gmail.com";
                 var KeyBytes = Encoding.ASCII.GetBytes(key);

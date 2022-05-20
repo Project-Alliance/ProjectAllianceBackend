@@ -73,7 +73,7 @@ namespace ProjectAlliance.Controllers
         }
 
         // PUT api/values/5
-        [HttpPut("update/{pid}")]
+        [HttpPut("update/{sid}")]
         public async Task<IActionResult> Put(int sid, [FromBody] ProjectSchedule value)
         {
             var sch = dbContext.Schedule.SingleOrDefault(s => s.id == sid);
@@ -81,12 +81,11 @@ namespace ProjectAlliance.Controllers
             {
                 sch.name = value.name;
                 sch.progress = value.progress;
-                sch.ProjectId = value.ProjectId;
                 sch.start = value.start;
                 sch.end = value.end;
-                sch.AssignTo = value.AssignTo;
                 sch.dependancies = value.dependancies;
-                dbContext.Schedule.Add(sch);
+
+                dbContext.Schedule.Update(sch);
                 await dbContext.SaveChangesAsync();
                 return Ok(new { message = "Scedule Updated successfully" });
             }

@@ -9,7 +9,7 @@ using ProjectAlliance.Data;
 namespace ProjectAlliance.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20220412104419_initial")]
+    [Migration("20220518171705_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,6 +108,35 @@ namespace ProjectAlliance.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Goals");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.Permisions", b =>
+                {
+                    b.Property<int>("permisionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Delete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("create")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("permisionTitle")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("read")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("update")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("permisionId");
+
+                    b.ToTable("permisions");
                 });
 
             modelBuilder.Entity("ProjectAlliance.Models.Project", b =>

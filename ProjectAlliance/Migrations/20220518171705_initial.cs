@@ -71,6 +71,24 @@ namespace ProjectAlliance.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "permisions",
+                columns: table => new
+                {
+                    permisionId = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    permisionTitle = table.Column<string>(nullable: true),
+                    create = table.Column<bool>(nullable: false),
+                    update = table.Column<bool>(nullable: false),
+                    Delete = table.Column<bool>(nullable: false),
+                    read = table.Column<bool>(nullable: false),
+                    userId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_permisions", x => x.permisionId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "projectDocument",
                 columns: table => new
                 {
@@ -232,6 +250,9 @@ namespace ProjectAlliance.Migrations
 
             migrationBuilder.DropTable(
                 name: "Goals");
+
+            migrationBuilder.DropTable(
+                name: "permisions");
 
             migrationBuilder.DropTable(
                 name: "projectDocument");
