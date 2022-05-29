@@ -38,7 +38,7 @@ namespace ProjectAlliance.CQRS.Command
             {
                 try
                 {
-                    var TEAM = new ProjectTeam();
+                    
                     var project = new Project();
                     project.ProjectTitle = command.ProjectTitle;
                     project.projectDescription = command.projectDescription;
@@ -60,6 +60,7 @@ namespace ProjectAlliance.CQRS.Command
                     await dbContext.SaveChangesAsync();
                     foreach(var team in command.team)
                     {
+                        var TEAM = new ProjectTeam();
                         TEAM.pid = project.pid;
                         TEAM.uid = team.value;
                         TEAM.role = team.role;

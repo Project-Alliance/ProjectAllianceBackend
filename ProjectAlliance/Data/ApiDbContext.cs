@@ -26,6 +26,7 @@ namespace ProjectAlliance.Data
         public DbSet<Goals> Goals { get; set; }
         public DbSet<ProjectSchedule> Schedule { get; set; }
         public DbSet<Permisions> permisions { get; set; }
+        public DbSet<Requirements> requirements { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

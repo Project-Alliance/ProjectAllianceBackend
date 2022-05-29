@@ -108,40 +108,7 @@ namespace ProjectAlliance.Controllers
 
         }
 
-        public void AddPermisionsToNewMembers(int id,string role){
-
-            if (role == "Moderator")
-            {
-                foreach (var permision in permisions)
-                {
-                    permision.create = true;
-                    permision.Delete = false;
-                    permision.read = true;
-                    permision.update = true;
-                    permision.userId = id;
-                    permision.permisionTitle = permision.permisionTitle;
-                    dbContext.permisions.Update(permision);
-
-                }
-                dbContext.SaveChanges();
-            }
-            else{
-                foreach (var permision in permisions)
-                {
-                    permision.create = false;
-                    permision.Delete = false;
-                    permision.read = true;
-                    permision.update = false;
-                    permision.userId = id;
-                    permision.permisionTitle = permision.permisionTitle;
-                    dbContext.permisions.Update(permision);
-
-                }
-                dbContext.SaveChanges();
-            }
-        }
-       
-
+    
       
     }
 }

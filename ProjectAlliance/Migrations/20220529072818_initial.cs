@@ -145,6 +145,23 @@ namespace ProjectAlliance.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "requirements",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    name = table.Column<string>(maxLength: 30, nullable: false),
+                    status = table.Column<string>(nullable: true),
+                    requirementDescription = table.Column<string>(nullable: true),
+                    uid = table.Column<int>(nullable: false),
+                    ProjectId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_requirements", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SubTasks",
                 columns: table => new
                 {
@@ -259,6 +276,9 @@ namespace ProjectAlliance.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProjectTeams");
+
+            migrationBuilder.DropTable(
+                name: "requirements");
 
             migrationBuilder.DropTable(
                 name: "Schedule");

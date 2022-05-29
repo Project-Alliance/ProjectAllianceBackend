@@ -267,6 +267,34 @@ namespace ProjectAlliance.Migrations
                     b.ToTable("ProjectTeams");
                 });
 
+            modelBuilder.Entity("ProjectAlliance.Models.Requirements", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
+
+                    b.Property<string>("requirementDescription")
+                        .HasColumnType("text");
+
+                    b.Property<string>("status")
+                        .HasColumnType("text");
+
+                    b.Property<int>("uid")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("requirements");
+                });
+
             modelBuilder.Entity("ProjectAlliance.Models.SubTasks", b =>
                 {
                     b.Property<int>("taskid")
