@@ -13,6 +13,7 @@
     <EmbeddedResource Remove="NewFolder\**" />
     <None Remove="NewFolder1\**" />
     <None Remove="NewFolder\**" />
+    <None Remove="Files\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +47,7 @@
     <Folder Include="CQRS\Notification\" />
     <Folder Include="Services\" />
     <Folder Include="Types\" />
+    <Folder Include="Files\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Grpc.Core" Version="2.45.0" />

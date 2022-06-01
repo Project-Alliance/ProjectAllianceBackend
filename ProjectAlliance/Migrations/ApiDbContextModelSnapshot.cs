@@ -267,6 +267,29 @@ namespace ProjectAlliance.Migrations
                     b.ToTable("ProjectTeams");
                 });
 
+            modelBuilder.Entity("ProjectAlliance.Models.RecevidMail", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("dcumentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("projectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("sharedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("sharedTO")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("mail");
+                });
+
             modelBuilder.Entity("ProjectAlliance.Models.RequirementAttachment", b =>
                 {
                     b.Property<int>("id")

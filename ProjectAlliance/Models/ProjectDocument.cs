@@ -27,6 +27,8 @@ namespace ProjectAlliance.Models
 
         [NotMapped]
         public IFormFile file { set; get; }
+        [NotMapped]
+        public int sharewith {set;get;}
 
     }
 }

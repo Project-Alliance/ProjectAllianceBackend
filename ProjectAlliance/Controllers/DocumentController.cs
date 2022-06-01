@@ -192,6 +192,16 @@ namespace ProjectAlliance.Controllers
 
             await dbContext.projectDocument.AddAsync(document);
             dbContext.SaveChanges();
+            
+                RecevidMail mail = new();
+                mail.dcumentId = document.documentId;
+                mail.projectId = document.projectId;
+                mail.sharedTO = value.sharewith;
+                mail.sharedBy = Convert.ToInt32(document.uploadBy);
+                dbContext.mail.Add(mail);
+                
+            
+            dbContext.SaveChanges();
             return Ok(new
             {
                 message = "Created Successfully"

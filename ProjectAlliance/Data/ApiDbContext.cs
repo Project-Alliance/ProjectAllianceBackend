@@ -29,7 +29,7 @@ namespace ProjectAlliance.Data
         public DbSet<Requirements> requirements { get; set; }
         public DbSet<RequirementModule> RequirementsModule { get; set; }
         public DbSet<RequirementAttachment> RequirementAttachments { get; set; }
-
+        public DbSet<RecevidMail> mail { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
