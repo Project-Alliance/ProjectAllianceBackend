@@ -267,13 +267,68 @@ namespace ProjectAlliance.Migrations
                     b.ToTable("ProjectTeams");
                 });
 
+            modelBuilder.Entity("ProjectAlliance.Models.RequirementAttachment", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("AttachmentExtension")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AttachmentPath")
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("requirementId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("RequirementAttachments");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.RequirementModule", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("modifeidOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("modifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("projectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("status")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("RequirementsModule");
+                });
+
             modelBuilder.Entity("ProjectAlliance.Models.Requirements", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<DateTime>("modifeidOn")
+                        .HasColumnType("Date");
+
+                    b.Property<string>("modifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<int>("moduleId")
                         .HasColumnType("int");
 
                     b.Property<string>("name")
@@ -284,11 +339,11 @@ namespace ProjectAlliance.Migrations
                     b.Property<string>("requirementDescription")
                         .HasColumnType("text");
 
-                    b.Property<string>("status")
+                    b.Property<string>("requirementType")
                         .HasColumnType("text");
 
-                    b.Property<int>("uid")
-                        .HasColumnType("int");
+                    b.Property<string>("status")
+                        .HasColumnType("text");
 
                     b.HasKey("id");
 

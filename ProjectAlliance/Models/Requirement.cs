@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
 
 namespace ProjectAlliance.Models
 {
@@ -13,8 +15,15 @@ namespace ProjectAlliance.Models
         public string name { get; set; }
         public string status { get; set; }
         public string requirementDescription { get; set; }
-        public int uid { get; set; }
-        public int ProjectId { get; set; }
+         public string requirementType { set; get; }
+         public string modifiedBy { set; get; }
+         [Column(TypeName = "Date")]
+         public DateTime modifeidOn { set; get; }
+        public int moduleId { get; set; }
+
+        [NotMapped]
+        public List<IFormFile> file { set; get; }
+        
        
         public Requirements()
         {
