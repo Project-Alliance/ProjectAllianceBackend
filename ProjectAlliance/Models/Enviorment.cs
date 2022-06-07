@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Http;
 
 namespace ProjectAlliance.Models{
@@ -14,6 +15,14 @@ namespace ProjectAlliance.Models{
 
         public int projectId { get; set; }
         public string TestType { get; set; }
+
+         [MaybeNull]
         public int RequirementId { get; set; }
+        public bool isRequirementBased { get; set; }
+
+
+        [NotMapped]
+        public List<LabResource> res { get; set; }
+      
     }
 }

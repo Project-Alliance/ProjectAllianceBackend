@@ -16,14 +16,14 @@ using ProjectAlliance.Services;
 namespace ProjectAlliance.Controllers
 {
     [Route("api/[controller]")]
-    public class RequirementsController : Controller
+    public class DesignController : Controller
     {
         // GET: api/values
 
         private readonly ApiDbContext dbContext;
         public readonly IJwtTokenManager _jwtTokenManage;
 
-        public RequirementsController(ApiDbContext _dbContext,IJwtTokenManager _jwtTokenManage)
+        public DesignController(ApiDbContext _dbContext,IJwtTokenManager _jwtTokenManage)
         {
             this.dbContext = _dbContext;
             this._jwtTokenManage = _jwtTokenManage;
@@ -31,8 +31,8 @@ namespace ProjectAlliance.Controllers
       
 
        [Authorize]
-        [HttpPost("createModule/{projectId}")]
-        public async Task<IActionResult> CreateModule(int projectId, [FromBody] RequirementModule value)
+        [HttpPost("createFolder")]
+        public async Task<IActionResult> CreateModule(int projectId, [FromBody] DesignFolder value)
         {
             if (!ModelState.IsValid)
             {
@@ -40,25 +40,25 @@ namespace ProjectAlliance.Controllers
             }
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             string userId = _jwtTokenManage.getUserId(identity.Claims);
-            var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) &&  s.pid == projectId && s.role == "Requirement Engineer").SingleOrDefault();
+            var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) &&  s.pid == projectId && s.role == "Designer").SingleOrDefault();
             if(permision==null)
             {
-                return BadRequest(new { message = "You have not permision, only Requirement Engineer can do this task" });
+                return BadRequest(new { message = "You have not permision, only Design Engineer can do this task" });
             }
-            RequirementModule module = new RequirementModule();
+            DesignFolder module = new DesignFolder();
             module.name = value.name;
-            module.status = value.status;
-            module.modifiedBy = userId;
+            module.folderType = "Design";
+            module.modifiedBy = Convert.ToInt16(userId);
             module.modifeidOn = DateTime.Now;
             module.projectId = projectId;
-            dbContext.RequirementsModule.Add(module);
+            dbContext.folders.Add(module);
             await dbContext.SaveChangesAsync();
-            return Ok(new{message="Module Created Successfully"});
+            return Ok(new{message="Folder Created Successfully"});
         }
         [Authorize]
 
-        [HttpPut("updateModule")]
-        public async Task<IActionResult> UpdateModule(int moduleId, [FromBody] RequirementModule value)
+        [HttpPut("updateFolder")]
+        public async Task<IActionResult> UpdateModule(int folderId, [FromBody] RequirementModule value)
         {
             if (!ModelState.IsValid)
             {
@@ -66,47 +66,44 @@ namespace ProjectAlliance.Controllers
             }
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             string userId = _jwtTokenManage.getUserId(identity.Claims);
-            var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) && s.pid == value.projectId && s.role == "Requirement Engineer").SingleOrDefault();
+            var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) && s.pid == value.projectId && s.role == "Designer").SingleOrDefault();
             if (permision == null)
             {
-                return BadRequest(new { message = "You have not permision, only Requirement Engineer can do this task" });
+                return BadRequest(new { message = "You have not permision, only Designer can do this task" });
             }
-            RequirementModule module = dbContext.RequirementsModule.Where(s => s.id == moduleId).SingleOrDefault();
+            DesignFolder module = dbContext.folders.Where(s => s.id == folderId).SingleOrDefault();
             module.name = value.name;
-            module.status = value.status;
-            module.modifiedBy = userId;
+            module.modifiedBy = Convert.ToInt16(userId);
             module.modifeidOn = DateTime.Now;
-            dbContext.RequirementsModule.Update(module);
+            dbContext.folders.Update(module);
             await dbContext.SaveChangesAsync();
-            return Ok(new { message = "Module Updated Successfully" });
+            return Ok(new { message = "Folder Updated Successfully" });
         }
         [Authorize]
         [HttpPost("create")]
-        public async Task<IActionResult> Create(int projectId,int moduleId,[FromForm]Requirements value)
+        public async Task<IActionResult> Create(int projectId,int folderId,[FromForm]Design value)
         {
           
            try{
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             IEnumerable<Claim> claim = identity.Claims;
             string userId = _jwtTokenManage.getUserId(claim);
-            var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) &&  s.pid == projectId && s.role == "Requirement Engineer").SingleOrDefault();
+            var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) &&  s.pid == projectId && s.role == "Designer").SingleOrDefault();
             if(permision==null)
             {
-                return BadRequest(new { message = "You have not permision, only Requirement Engineer can do this task" });
+                return BadRequest(new { message = "You have not permision, only Designer can do this task" });
             }
-            Requirements req=new Requirements();
-            req.name = value.name;
-            req.status = value.status;
-            req.requirementDescription = value.requirementDescription;
-            req.requirementType=value.requirementType;
-            req.moduleId=moduleId;
-            req.modifiedBy = userId;
-            req.modifeidOn = DateTime.Now;
-            dbContext.requirements.Add(req);
+            Design req=new Design();
+            req.Name = value.Name;
+            req.Description = value.Description;
+            req.folderId = folderId;
+            req.url=value.url;
+            dbContext.Designs.Add(req);
             dbContext.SaveChanges();
-            if(value.file!=null)
-            {foreach(var file in value.file){
-                RequirementAttachment attachment= new RequirementAttachment();
+
+            if(value.file!=null){
+            foreach(var file in value.file){
+            DesignAttachment attachment= new DesignAttachment();
 
             //Getting FileName
             var fileName = Path.GetFileName(file.FileName);
@@ -127,14 +124,15 @@ namespace ProjectAlliance.Controllers
                 attachment.name = fileName;
                 attachment.AttachmentExtension = fileExtension;
                 attachment.AttachmentPath = newFileName;
-                attachment.requirementId = req.id;
-                dbContext.RequirementAttachments.Add(attachment);
+                attachment.designId = req.id;
+                dbContext.DesignAttachments.Add(attachment);
                 
             }
             
             }
-            await dbContext.SaveChangesAsync();}
-            return Ok(new { message = "Requirement Created" });
+            await dbContext.SaveChangesAsync();
+            }
+            return Ok(new { message = "Design Created" });
            }
            catch(Exception ex){
                return Ok(new { message = ex.Message });
@@ -149,21 +147,21 @@ namespace ProjectAlliance.Controllers
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 IEnumerable<Claim> claim = identity.Claims;
                 string userId = _jwtTokenManage.getUserId(claim);
-                var req = dbContext.RequirementsModule.Where(s => s.projectId == projectId).ToList();
-                List <object> modules = new List<object>();
-                if(req!=null)
+                var folders = dbContext.folders.Where(s => s.projectId == projectId && s.folderType=="Design").ToList();
+                List <object> folderArray = new List<object>();
+                if(folders!=null)
                 {
-                    foreach(var item in req)
+                    foreach(var item in folders)
                     {
-                        List <object> requirementsArray = new List<object>();
-                        var requirements = dbContext.requirements.Where(s => s.moduleId == item.id).ToList();
-                        if(requirements==null)
+                        List <object> designArray = new List<object>();
+                        var design = dbContext.Designs.Where(s => s.folderId == item.id).ToList();
+                        if(design==null)
                         {
-                            return BadRequest(new { message = "No Requirement Found" });
+                            return BadRequest(new { message = "No Design Found" });
                         }
-                        foreach(var reqItem in requirements)
+                        foreach(var reqItem in design)
                         {
-                            var attachments = dbContext.RequirementAttachments.Where(s => s.requirementId == reqItem.id).ToList();
+                            var attachments = dbContext.DesignAttachments.Where(s => s.designId == reqItem.id).ToList();
                             List<object> attachmentsArray = new List<object>();
                             if(attachments!=null)
                             {
@@ -172,23 +170,23 @@ namespace ProjectAlliance.Controllers
                                     attachmentsArray.Add(new { id=attachment.id,name = attachment.name, AttachmentExtension = attachment.AttachmentExtension, AttachmentPath = "http://localhost:5000/api/Document/FileAPI/"+attachment.AttachmentPath });
                                 }
                             }
-                            object reqObj = new { id = reqItem.id, name = reqItem.name, status = reqItem.status, requirementDescription = reqItem.requirementDescription, requirementType = reqItem.requirementType, attachments = attachmentsArray };
-                            requirementsArray.Add(reqObj);
+                            object reqObj = new { id = reqItem.id, Name = reqItem.Name, description = reqItem.Description, url = reqItem.url, attachments = attachmentsArray };
+                            designArray.Add(reqObj);
                         }
                         object module = 
                         new { 
                         id = item.id, 
-                        moduleName = item.name, 
-                        moduleStatus = item.status, 
+                        folderName = item.name, 
+                        
                         modifiedBy = item.modifiedBy,
                         modifeidOn = item.modifeidOn, 
                         projectId = item.projectId, 
-                        requirements = requirementsArray 
+                        Design = designArray 
                         };
-                        modules.Add(module);
+                        folderArray.Add(module);
                     }
                 }
-                return Ok(modules);
+                return Ok(folderArray);
             }
             catch (Exception ex)
             {
@@ -198,34 +196,34 @@ namespace ProjectAlliance.Controllers
 
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> Update(int reqId,int projectId,[FromForm]Requirements value)
+        public async Task<IActionResult> Update(int projectId,int designId,[FromForm]Design value)
         {
             try
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 IEnumerable<Claim> claim = identity.Claims;
                 string userId = _jwtTokenManage.getUserId(claim);
-                var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) &&s.pid==projectId&& s.role == "Requirement Engineer").SingleOrDefault();
+                var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) &&s.pid==projectId&& s.role == "Designer").SingleOrDefault();
                 if (permision == null)
                 {
-                    return BadRequest(new { message = "You have not permision, only Requirement Engineer can perform requirement update" });
+                    return BadRequest(new { message = "You have not permision, only Designer can perform requirement update" });
                 }
-                var req = await dbContext.requirements.Where(s => s.id == reqId).SingleOrDefaultAsync();
+                var req = await dbContext.Designs.Where(s => s.id == designId).SingleOrDefaultAsync();
                 if(req==null)
                 {
-                    return BadRequest(new { message = "Requirement not found" });
+                    return BadRequest(new { message = "Design not found" });
                 }
-                req.name = value.name;
-                req.status = value.status;
-                req.requirementDescription = value.requirementDescription;
-                req.requirementType = value.requirementType;
-                req.modifiedBy = userId;
-                req.modifeidOn = DateTime.Now;
-                dbContext.requirements.Update(req);
+                req.Name = value.Name;
+                req.Description = value.Description;
+                req.url=value.url;
+                
+                dbContext.Designs.Update(req);
                 dbContext.SaveChanges();
-                foreach(var file in value.file)
+                if(value.file!=null)
                 {
-                    RequirementAttachment attachment = new RequirementAttachment();
+                      foreach(var file in value.file)
+                {
+                    DesignAttachment attachment = new DesignAttachment();
                     //Getting FileName
                     var fileName = Path.GetFileName(file.FileName);
                     //Getting file Extension
@@ -245,14 +243,15 @@ namespace ProjectAlliance.Controllers
                         attachment.name = fileName;
                         attachment.AttachmentExtension = fileExtension;
                         attachment.AttachmentPath = newFileName;
-                        attachment.requirementId = req.id;
-                        dbContext.RequirementAttachments.Add(attachment);
+                        attachment.designId = req.id;
+                        dbContext.DesignAttachments.Add(attachment);
 
                     }
                 }
                 await dbContext.SaveChangesAsync();
 
-                return Ok(new { message = "Requirement Updated" });
+                }
+                return Ok(new { message = "Design Updated" });
             }
             catch (Exception ex)
             {
@@ -261,26 +260,26 @@ namespace ProjectAlliance.Controllers
         }
         [Authorize]
         [HttpDelete("delete")]
-        public async Task<IActionResult> Delete(int reqId,int projectId)
+        public async Task<IActionResult> Delete(int designId,int projectId)
         {
             try
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 IEnumerable<Claim> claim = identity.Claims;
                 string userId = _jwtTokenManage.getUserId(claim);
-                var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) && s.pid == projectId && s.role == "Requirement Engineer").SingleOrDefault();
+                var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) && s.pid == projectId && s.role == "Designer").SingleOrDefault();
                 if (permision == null)
                 {
-                    return BadRequest(new { message = "You have not permision, only Requirement Engineer can perform requirement delete" });
+                    return BadRequest(new { message = "You have not permision, only Designer can perform requirement delete" });
                 }
-                var req = await dbContext.requirements.Where(s => s.id == reqId).SingleOrDefaultAsync();
+                var req = await dbContext.Designs.Where(s => s.id == designId).SingleOrDefaultAsync();
                 if(req==null)
                 {
                     return BadRequest(new { message = "Requirement not found" });
                 }
-                dbContext.requirements.Remove(req);
+                dbContext.Designs.Remove(req);
                 await dbContext.SaveChangesAsync();
-                return Ok(new { message = "Requirement Deleted" });
+                return Ok(new { message = "Designs Deleted" });
             }
             catch (Exception ex)
             {
@@ -290,24 +289,24 @@ namespace ProjectAlliance.Controllers
 
         [Authorize]
         [HttpDelete("deleteAttachment")]
-        public async Task<IActionResult> DeleteAttachment(int attachmentId)
+        public async Task<IActionResult> DeleteAttachment(int attachmentId,int projectId)
         {
             try
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 IEnumerable<Claim> claim = identity.Claims;
                 string userId = _jwtTokenManage.getUserId(claim);
-                var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) && s.role == "Requirement Engineer").SingleOrDefault();
+                var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) && s.pid==projectId &&s.role == "Designer").SingleOrDefault();
                 if (permision == null)
                 {
-                    return BadRequest(new { message = "You have not permision, only Requirement Engineer can perform requirement delete" });
+                    return BadRequest(new { message = "You have not permision, only Designer can perform requirement delete" });
                 }
-                var attachment = await dbContext.RequirementAttachments.Where(s => s.id == attachmentId).SingleOrDefaultAsync();
+                var attachment = await dbContext.DesignAttachments.Where(s => s.id == attachmentId).SingleOrDefaultAsync();
                 if(attachment==null)
                 {
                     return BadRequest(new { message = "Attachment not found" });
                 }
-                dbContext.RequirementAttachments.Remove(attachment);
+                dbContext.DesignAttachments.Remove(attachment);
                 await dbContext.SaveChangesAsync();
                 return Ok(new { message = "Attachment Deleted" });
             }
@@ -318,30 +317,30 @@ namespace ProjectAlliance.Controllers
         }
 
         [Authorize]
-        [HttpDelete("deleteModule")]
-        public async Task<IActionResult> DeleteModule(int moduleId,int projectId)
+        [HttpDelete("desleteFolder")]
+        public async Task<IActionResult> DeleteModule(int folderId,int projectId)
         {
             try
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 IEnumerable<Claim> claim = identity.Claims;
                 string userId = _jwtTokenManage.getUserId(claim);
-                var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) &&s.pid==projectId && s.role == "Requirement Engineer").SingleOrDefault();
+                var permision = dbContext.ProjectTeams.Where(s => s.uid == Convert.ToInt16(userId) &&s.pid==projectId && s.role == "Designer").SingleOrDefault();
                 if (permision == null)
                 {
-                    return BadRequest(new { message = "You have not permision, only Requirement Engineer can perform requirement delete" });
+                    return BadRequest(new { message = "You have not permision, only Designer can perform requirement delete" });
                 }
-                var module = await dbContext.RequirementsModule.Where(s => s.id == moduleId).SingleOrDefaultAsync();
-                if(module==null)
+                var folder = await dbContext.folders.Where(s => s.id == folderId).SingleOrDefaultAsync();
+                if(folder==null)
                 {
                     return BadRequest(new { message = "Module not found" });
                 }
-                var requirement = dbContext.requirements.Where(s => s.moduleId == module.id).ToList();
-                if(requirement.Count>0)
+                var Design = dbContext.Designs.Where(s => s.folderId == folder.id).ToList();
+                if(Design.Count>0)
                 {
-                    return BadRequest(new { message = "Module has requirement, can't delete" });
+                    return BadRequest(new { message = "Module has Design, can't delete" });
                 }
-                dbContext.RequirementsModule.Remove(module);
+                dbContext.folders.Remove(folder);
                 await dbContext.SaveChangesAsync();
                 return Ok(new { message = "Module Deleted" });
             }

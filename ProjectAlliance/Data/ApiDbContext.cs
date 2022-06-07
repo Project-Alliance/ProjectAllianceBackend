@@ -25,10 +25,26 @@ namespace ProjectAlliance.Data
         public DbSet<Files> Files { get; set; }
         public DbSet<Goals> Goals { get; set; }
         public DbSet<ProjectSchedule> Schedule { get; set; }
+
+         public DbSet<QualitySchedule> QualitySchedule { get; set; }
         public DbSet<Permisions> permisions { get; set; }
         public DbSet<Requirements> requirements { get; set; }
         public DbSet<RequirementModule> RequirementsModule { get; set; }
         public DbSet<RequirementAttachment> RequirementAttachments { get; set; }
+
+        public DbSet<Design> Designs { get; set; }
+        public DbSet<DesignAttachment> DesignAttachments { get; set; }
+        public DbSet<DesignFolder> folders { get; set; }
+
+        public DbSet<Enviorment> enviornment { get; set; }
+
+        public DbSet<LabResource> labResource { get; set; }
+        public DbSet<TestCases> testCases { get; set; }
+        public DbSet<TestPlan> testPlan { get; set; }
+        public DbSet<TestResult> testResult { get; set; }
+        public DbSet<TestCaseAttachment> TestCaseAttachment { get; set; }
+
+
         public DbSet<RecevidMail> mail { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

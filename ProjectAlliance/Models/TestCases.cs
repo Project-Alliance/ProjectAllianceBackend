@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Http;
 
 namespace ProjectAlliance.Models{
@@ -11,6 +12,10 @@ namespace ProjectAlliance.Models{
         public string Name { get; set; }
         public string categoryName { get; set; }
         public string categoryType { get; set; }
+
+        public string testType { get; set; }
+
+       
 
         public int testPlanId { get; set; }
 

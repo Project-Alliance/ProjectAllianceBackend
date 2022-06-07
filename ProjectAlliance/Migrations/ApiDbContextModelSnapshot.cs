@@ -35,6 +35,78 @@ namespace ProjectAlliance.Migrations
                     b.ToTable("Company");
                 });
 
+            modelBuilder.Entity("ProjectAlliance.Models.Design", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("folderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("url")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Designs");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.DesignAttachment", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("AttachmentExtension")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AttachmentPath")
+                        .HasColumnType("text");
+
+                    b.Property<int>("designId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("name")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("DesignAttachments");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.DesignFolder", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("folderType")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("modifeidOn")
+                        .HasColumnType("Date");
+
+                    b.Property<int>("modifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("projectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("folders");
+                });
+
             modelBuilder.Entity("ProjectAlliance.Models.DocumentSection", b =>
                 {
                     b.Property<int>("sectionId")
@@ -54,6 +126,38 @@ namespace ProjectAlliance.Migrations
                     b.HasKey("sectionId");
 
                     b.ToTable("documentSection");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.Enviorment", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("RequirementId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TestType")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("isRequirementBased")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("projectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("summary")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("enviornment");
                 });
 
             modelBuilder.Entity("ProjectAlliance.Models.Files", b =>
@@ -106,6 +210,26 @@ namespace ProjectAlliance.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Goals");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.LabResource", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("EnvId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("value")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("labResource");
                 });
 
             modelBuilder.Entity("ProjectAlliance.Models.Permisions", b =>
@@ -267,6 +391,42 @@ namespace ProjectAlliance.Migrations
                     b.ToTable("ProjectTeams");
                 });
 
+            modelBuilder.Entity("ProjectAlliance.Models.QualitySchedule", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AssignTo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("dependancies")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("end")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
+
+                    b.Property<int>("progress")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("start")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("QualitySchedule");
+                });
+
             modelBuilder.Entity("ProjectAlliance.Models.RecevidMail", b =>
                 {
                     b.Property<int>("id")
@@ -320,7 +480,7 @@ namespace ProjectAlliance.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("modifeidOn")
-                        .HasColumnType("datetime");
+                        .HasColumnType("Date");
 
                     b.Property<string>("modifiedBy")
                         .HasColumnType("text");
@@ -443,6 +603,104 @@ namespace ProjectAlliance.Migrations
                     b.ToTable("Tasks");
                 });
 
+            modelBuilder.Entity("ProjectAlliance.Models.TestCaseAttachment", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("AttachmentExtension")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AttachmentPath")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AtttachmentType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("testresultId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("TestCaseAttachment");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.TestCases", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("categoryName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("categoryType")
+                        .HasColumnType("text");
+
+                    b.Property<int>("testPlanId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("testType")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("testCases");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.TestPlan", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("EnvId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("testPlan");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.TestResult", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExpectedOutcome")
+                        .HasColumnType("text");
+
+                    b.Property<int>("testId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("testOutCome")
+                        .HasColumnType("text");
+
+                    b.Property<string>("url")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("testResult");
+                });
+
             modelBuilder.Entity("ProjectAlliance.Models.User", b =>
                 {
                     b.Property<int>("id")
@@ -489,6 +747,15 @@ namespace ProjectAlliance.Migrations
                 {
                     b.HasOne("ProjectAlliance.Models.Project", "pid")
                         .WithMany("projectSchedules")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.QualitySchedule", b =>
+                {
+                    b.HasOne("ProjectAlliance.Models.Project", "pid")
+                        .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
