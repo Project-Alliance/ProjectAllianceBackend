@@ -169,30 +169,78 @@ namespace ProjectAlliance.Controllers
                 return BadRequest(ModelState);
             }
         }
-        [Authorize]
-        [HttpGet("getResult")]
-        public async Task<IActionResult> GetTestResult(int pid){
-                
-        }
+    
+
 
         [Authorize]
         [HttpGet("getTestCases")]
         public async Task<IActionResult> Get(int pid)
         {
             var env = await dbContext.enviornment.Where(e => e.projectId == pid&& !e.isRequirementBased).ToListAsync();
-            List<object> testCasesArray = new List<object>();
+            List<object> EnvArray = new List<object>();
             foreach(var envioroment in env){
                 List<object> planArray=new List<object>();
                 var testPlan = await dbContext.testPlan.Where(t => t.EnvId == envioroment.id).ToListAsync();
                 foreach(var tplan in testPlan){
-                    
+                    List<object> testCasesArray=new List<object>();
                     var testCases = await dbContext.testCases.Where(t=>t.id==tplan.id).ToListAsync();
+                    foreach(var test in testCases)
+                    {
+                        
+                        var resultTestCase=dbContext.testResult.Where(s=>s.testId==test.id).ToList();
+                        List<object> resultArray=new List<object>();
+                        foreach(var result in resultTestCase)
+                        {
+                            
+                            List<object> ExpectedOutcome=new List<object>();
+                            List<object> testOutCome=new List<object>();
+                            var resultAttachment=dbContext.TestCaseAttachment.Where(s=>s.testresultId==result.id&&s.AtttachmentType=="ExpectedOutcome").ToList();
+                            foreach(var ra in resultAttachment){
+                                object obj=new {
+                                    ra.AttachmentExtension,
+                                    AttachmentPath="http://localhost:5000/Files/"+ra.AttachmentPath,
+                                    ra.AtttachmentType,
+                                    ra.id,
+                                    ra.name
+                                };
+                                ExpectedOutcome.Add(obj);
+                            }
+                            var resultAttachment2=dbContext.TestCaseAttachment.Where(s=>s.testresultId==result.id&&s.AtttachmentType=="testOutCome").ToList();
+                            foreach(var ra in resultAttachment2){
+                                object obj=new {
+                                    ra.AttachmentExtension,
+                                    AttachmentPath="http://localhost:5000/Files/"+ra.AttachmentPath,
+                                    ra.AtttachmentType,
+                                    ra.id,
+                                    ra.name
+                                };
+                                testOutCome.Add(obj);
+                            }
+                            resultArray.Add(new{
+                                result.Description,
+                                result.id,
+                                result.testId,
+                                ExpectedOutcome,
+                                testOutCome
+                            });
+                        }
+                        testCasesArray.Add(new{
+                            test.categoryName,
+                            test.categoryType,
+                            test.testType,
+                            test.id,
+                            test.testPlanId,
+                            testResult=resultArray
+                        });
+                      
+                        
+                    }
                     var caseobject=new{
                         tplan.id,
                         tplan.EnvId,
                         tplan.Description,
                         tplan.Name,
-                        testCases=testCases
+                        testCases=testCasesArray
                     
                     };
                     planArray.Add(caseobject);
@@ -207,28 +255,79 @@ namespace ProjectAlliance.Controllers
                     LabResource=LabResource,
                     plans=planArray
                 };
-                testCasesArray.Add(envioromentobject);
+                EnvArray.Add(envioromentobject);
             }
-            return Ok(testCasesArray);
+            return Ok(EnvArray);
         }
        [Authorize]
         [HttpGet("getRequirementBasedTestCases")]
-        public async Task<IActionResult> GetTest(int pid)
+          public async Task<IActionResult> GetTest(int pid)
         {
-            var env = await dbContext.enviornment.Where(e => e.projectId == pid && e.isRequirementBased).ToListAsync();
-            List<object> testCasesArray = new List<object>();
+            var env = await dbContext.enviornment.Where(e => e.projectId == pid&& e.isRequirementBased).ToListAsync();
+            List<object> EnvArray = new List<object>();
             foreach(var envioroment in env){
                 List<object> planArray=new List<object>();
                 var testPlan = await dbContext.testPlan.Where(t => t.EnvId == envioroment.id).ToListAsync();
                 foreach(var tplan in testPlan){
-                    
+                    List<object> testCasesArray=new List<object>();
                     var testCases = await dbContext.testCases.Where(t=>t.id==tplan.id).ToListAsync();
+                    foreach(var test in testCases)
+                    {
+                        
+                        var resultTestCase=dbContext.testResult.Where(s=>s.testId==test.id).ToList();
+                        List<object> resultArray=new List<object>();
+                        foreach(var result in resultTestCase)
+                        {
+                            
+                            List<object> ExpectedOutcome=new List<object>();
+                            List<object> testOutCome=new List<object>();
+                            var resultAttachment=dbContext.TestCaseAttachment.Where(s=>s.testresultId==result.id&&s.AtttachmentType=="ExpectedOutcome").ToList();
+                            foreach(var ra in resultAttachment){
+                                object obj=new {
+                                    ra.AttachmentExtension,
+                                    AttachmentPath="http://localhost:5000/Files/"+ra.AttachmentPath,
+                                    ra.AtttachmentType,
+                                    ra.id,
+                                    ra.name
+                                };
+                                ExpectedOutcome.Add(obj);
+                            }
+                            var resultAttachment2=dbContext.TestCaseAttachment.Where(s=>s.testresultId==result.id&&s.AtttachmentType=="testOutCome").ToList();
+                            foreach(var ra in resultAttachment2){
+                                object obj=new {
+                                    ra.AttachmentExtension,
+                                    AttachmentPath="http://localhost:5000/Files/"+ra.AttachmentPath,
+                                    ra.AtttachmentType,
+                                    ra.id,
+                                    ra.name
+                                };
+                                testOutCome.Add(obj);
+                            }
+                            resultArray.Add(new{
+                                result.Description,
+                                result.id,
+                                result.testId,
+                                ExpectedOutcome,
+                                testOutCome
+                            });
+                        }
+                        testCasesArray.Add(new{
+                            test.categoryName,
+                            test.categoryType,
+                            test.testType,
+                            test.id,
+                            test.testPlanId,
+                            testResult=resultArray
+                        });
+                      
+                        
+                    }
                     var caseobject=new{
                         tplan.id,
                         tplan.EnvId,
                         tplan.Description,
                         tplan.Name,
-                        testCases=testCases
+                        testCases=testCasesArray
                     
                     };
                     planArray.Add(caseobject);
@@ -236,6 +335,7 @@ namespace ProjectAlliance.Controllers
             var LabResource= await dbContext.labResource.Where(l=>l.EnvId==envioroment.id).ToListAsync();
                 var envioromentobject=new{
                     envioroment.id,
+                    envioroment.RequirementId,
                     envioroment.projectId,
                     envioroment.Description,
                     envioroment.Name,
@@ -243,10 +343,10 @@ namespace ProjectAlliance.Controllers
                     LabResource=LabResource,
                     plans=planArray
                 };
-                testCasesArray.Add(envioromentobject);
+                EnvArray.Add(envioromentobject);
             }
-            return Ok(testCasesArray);
+            return Ok(EnvArray);
         }
-       
+      
     }
 }
