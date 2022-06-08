@@ -183,7 +183,7 @@ namespace ProjectAlliance.Controllers
                 var testPlan = await dbContext.testPlan.Where(t => t.EnvId == envioroment.id).ToListAsync();
                 foreach(var tplan in testPlan){
                     List<object> testCasesArray=new List<object>();
-                    var testCases = await dbContext.testCases.Where(t=>t.id==tplan.id).ToListAsync();
+                    var testCases = await dbContext.testCases.Where(t=>t.testPlanId==tplan.id).ToListAsync();
                     foreach(var test in testCases)
                     {
                         
@@ -196,25 +196,25 @@ namespace ProjectAlliance.Controllers
                             List<object> testOutCome=new List<object>();
                             var resultAttachment=dbContext.TestCaseAttachment.Where(s=>s.testresultId==result.id&&s.AtttachmentType=="ExpectedOutcome").ToList();
                             foreach(var ra in resultAttachment){
-                                object obj=new {
+                                object obj1=new {
                                     ra.AttachmentExtension,
                                     AttachmentPath="http://localhost:5000/Files/"+ra.AttachmentPath,
                                     ra.AtttachmentType,
                                     ra.id,
                                     ra.name
                                 };
-                                ExpectedOutcome.Add(obj);
+                                ExpectedOutcome.Add(obj1);
                             }
                             var resultAttachment2=dbContext.TestCaseAttachment.Where(s=>s.testresultId==result.id&&s.AtttachmentType=="testOutCome").ToList();
                             foreach(var ra in resultAttachment2){
-                                object obj=new {
+                                object obj2=new {
                                     ra.AttachmentExtension,
                                     AttachmentPath="http://localhost:5000/Files/"+ra.AttachmentPath,
                                     ra.AtttachmentType,
                                     ra.id,
                                     ra.name
                                 };
-                                testOutCome.Add(obj);
+                                testOutCome.Add(obj2);
                             }
                             resultArray.Add(new{
                                 result.Description,
@@ -224,14 +224,17 @@ namespace ProjectAlliance.Controllers
                                 testOutCome
                             });
                         }
-                        testCasesArray.Add(new{
+                        var obj = new
+                        {
                             test.categoryName,
+                            test.Name,
                             test.categoryType,
                             test.testType,
                             test.id,
                             test.testPlanId,
-                            testResult=resultArray
-                        });
+                            testResult = resultArray
+                        };
+                        testCasesArray.Add(obj);
                       
                         
                     }
@@ -270,7 +273,7 @@ namespace ProjectAlliance.Controllers
                 var testPlan = await dbContext.testPlan.Where(t => t.EnvId == envioroment.id).ToListAsync();
                 foreach(var tplan in testPlan){
                     List<object> testCasesArray=new List<object>();
-                    var testCases = await dbContext.testCases.Where(t=>t.id==tplan.id).ToListAsync();
+                    var testCases = await dbContext.testCases.Where(t=>t.testPlanId==tplan.id).ToListAsync();
                     foreach(var test in testCases)
                     {
                         
@@ -313,6 +316,7 @@ namespace ProjectAlliance.Controllers
                         }
                         testCasesArray.Add(new{
                             test.categoryName,
+                            test.Name,
                             test.categoryType,
                             test.testType,
                             test.id,
