@@ -46,6 +46,7 @@ namespace ProjectAlliance.Data
 
 
         public DbSet<RecevidMail> mail { get; set; }
+        public DbSet<EmailAttachment> mailAttachments { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

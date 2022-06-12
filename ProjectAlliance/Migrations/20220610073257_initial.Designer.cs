@@ -9,7 +9,7 @@ using ProjectAlliance.Data;
 namespace ProjectAlliance.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20220607174600_initial")]
+    [Migration("20220610073257_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -128,6 +128,32 @@ namespace ProjectAlliance.Migrations
                     b.HasKey("sectionId");
 
                     b.ToTable("documentSection");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.EmailAttachment", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("emailId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ext")
+                        .HasColumnType("text");
+
+                    b.Property<string>("fakeName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("path")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("mailAttachments");
                 });
 
             modelBuilder.Entity("ProjectAlliance.Models.Enviorment", b =>
@@ -435,17 +461,32 @@ namespace ProjectAlliance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("dcumentId")
-                        .HasColumnType("int");
+                    b.Property<string>("company")
+                        .HasColumnType("text");
 
-                    b.Property<int>("projectId")
-                        .HasColumnType("int");
+                    b.Property<string>("description")
+                        .HasColumnType("text");
 
-                    b.Property<int>("sharedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("from")
+                        .HasColumnType("text");
 
-                    b.Property<int>("sharedTO")
-                        .HasColumnType("int");
+                    b.Property<bool>("isRead")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("isStared")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("subject")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("time")
+                        .HasColumnType("DateTime");
+
+                    b.Property<string>("title")
+                        .HasColumnType("text");
+
+                    b.Property<string>("to")
+                        .HasColumnType("text");
 
                     b.HasKey("id");
 
@@ -686,17 +727,8 @@ namespace ProjectAlliance.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<string>("ExpectedOutcome")
-                        .HasColumnType("text");
-
                     b.Property<int>("testId")
                         .HasColumnType("int");
-
-                    b.Property<string>("testOutCome")
-                        .HasColumnType("text");
-
-                    b.Property<string>("url")
-                        .HasColumnType("text");
 
                     b.HasKey("id");
 

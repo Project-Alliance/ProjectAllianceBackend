@@ -39,7 +39,8 @@ namespace ProjectAlliance.CQRS.Query
                                 id=member.id,
                                 name=member.name,
                                 email=member.email,
-                                role=member.role
+                                role=member.role,
+                                member.userName,                                
 
                             };
                             data.Add(obj);

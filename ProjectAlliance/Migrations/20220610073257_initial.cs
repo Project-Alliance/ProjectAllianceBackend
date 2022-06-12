@@ -159,14 +159,36 @@ namespace ProjectAlliance.Migrations
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    projectId = table.Column<int>(nullable: false),
-                    dcumentId = table.Column<int>(nullable: false),
-                    sharedBy = table.Column<int>(nullable: false),
-                    sharedTO = table.Column<int>(nullable: false)
+                    subject = table.Column<string>(nullable: true),
+                    title = table.Column<string>(nullable: true),
+                    description = table.Column<string>(nullable: true),
+                    time = table.Column<DateTime>(type: "DateTime", nullable: false),
+                    to = table.Column<string>(nullable: true),
+                    from = table.Column<string>(nullable: true),
+                    isRead = table.Column<bool>(nullable: false),
+                    isStared = table.Column<bool>(nullable: false),
+                    company = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_mail", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "mailAttachments",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    name = table.Column<string>(nullable: true),
+                    emailId = table.Column<int>(nullable: false),
+                    path = table.Column<string>(nullable: true),
+                    ext = table.Column<string>(nullable: true),
+                    fakeName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_mailAttachments", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -391,9 +413,6 @@ namespace ProjectAlliance.Migrations
                     id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Description = table.Column<string>(nullable: true),
-                    ExpectedOutcome = table.Column<string>(nullable: true),
-                    testOutCome = table.Column<string>(nullable: true),
-                    url = table.Column<string>(nullable: true),
                     testId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -515,6 +534,9 @@ namespace ProjectAlliance.Migrations
 
             migrationBuilder.DropTable(
                 name: "mail");
+
+            migrationBuilder.DropTable(
+                name: "mailAttachments");
 
             migrationBuilder.DropTable(
                 name: "permisions");

@@ -138,7 +138,27 @@ namespace ProjectAlliance.Controllers
             memory.Position = 0;
             return File(memory, fileServices.GetContentType(path), Path.GetFileName(path));
         }
-        [Authorize]
+        [HttpGet]
+        [Route("FileAPIV/{fileName}")]
+        public HttpResponseMessage DownloadVideo(string filename)
+        {
+            
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", filename);
+
+            if (filename != null)
+            {
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StreamContent(new FileStream(path, FileMode.Open, FileAccess.Read));
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = filename
+                };
+                return response;
+            }
+            else return new HttpResponseMessage(HttpStatusCode.BadRequest);
+        }
+       [Authorize]
         [HttpPost("saveDocumentToDatabase")]
         public async Task<IActionResult> SaveDocumentInformation([FromForm] ProjectDocument value)
         {
@@ -191,17 +211,7 @@ namespace ProjectAlliance.Controllers
 
 
             await dbContext.projectDocument.AddAsync(document);
-            dbContext.SaveChanges();
-            
-                RecevidMail mail = new();
-                mail.dcumentId = document.documentId;
-                mail.projectId = document.projectId;
-                mail.sharedTO = value.sharewith;
-                mail.sharedBy = Convert.ToInt32(document.uploadBy);
-                dbContext.mail.Add(mail);
-                
-            
-            dbContext.SaveChanges();
+            dbContext.SaveChanges();           
             return Ok(new
             {
                 message = "Created Successfully"

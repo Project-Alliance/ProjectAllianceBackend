@@ -101,7 +101,8 @@ namespace ProjectAlliance.Controllers
                             email = membersData.email,
                             uid = teams.uid,
                             pid = teams.pid,
-                            id=teams.id
+                            id=teams.id,
+                            membersData.userName
 
                         };
                         team.Add(MemberData);

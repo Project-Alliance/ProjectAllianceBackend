@@ -21,6 +21,7 @@ namespace ProjectAlliance
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+
                 });
     }
 }

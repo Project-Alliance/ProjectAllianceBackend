@@ -68,10 +68,9 @@ namespace ProjectAlliance.Controllers
             string userId=_jwtTokenManager.getUserId(claim);
             if (userId != null)
             {
-                var permision = dbContext.permisions.Where(s => s.userId == Convert.ToInt16(userId)&&(s.permisionTitle== "superUser" || s.permisionTitle=="manageMembers")).SingleOrDefault();
-                if (permision != null && permision.read)
+                
                     return CustomResponse(await mediator.Send(new GetMembersQuery { company = id }));
-                else return BadRequest(new { message  = "Not allowed" });
+               
             }
             else
                 return BadRequest("unauthroized user");
