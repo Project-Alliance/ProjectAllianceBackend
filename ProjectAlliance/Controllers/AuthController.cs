@@ -18,6 +18,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using ProjectAlliance.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.Mail;
+using System.Net;
+using System.IO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -106,6 +109,7 @@ namespace ProjectAlliance.Controllers
                 user.userName = value.userName+"@"+value.company.ToLower()+".pa.com";
                 user.role = "admin";
                 user.password= BCryptNet.HashPassword(value.password);
+                
                 comp.companyName = value.company;
 
                 dbContext.Company.Add(comp);
@@ -179,7 +183,8 @@ namespace ProjectAlliance.Controllers
                         phone = user.phone,
                         role = user.role,
                         company= company.companyName,
-                        permisions=Permisions
+                        permisions=Permisions,
+                        profilePic="http://localhost:5000/api/Document/FileAPI/"+user.profilePic
                     };
                    
                     return Ok(res);
@@ -199,6 +204,165 @@ namespace ProjectAlliance.Controllers
            
 
             }
+       
+       [HttpPost("forgotPassword")]
+         public IActionResult ForgotPassword(string UserName)
+        {
+            var user = dbContext.Users
+                       .Where(s => s.userName == UserName)
+                       .FirstOrDefault();
+            if(user != null)
+            {
+                string password = "P"+user.name+Math.Floor(new Random().NextDouble() * 1000000);
+                string email = user.email;
+                string userName = user.userName;
+                string name = user.name;
+                user.password=BCryptNet.HashPassword(password);
+                dbContext.Users.Update(user);
+                dbContext.SaveChanges();
+                string company = dbContext.Company.Where(s => s.id == Convert.ToInt16(user.companyId)).FirstOrDefault().companyName;
+                string subject = "Password Recovery";
+                string body = "Hi "+name+",<br/><br/>"+"Your Password is: "+password+"<br/><br/>"+"Regards,<br/>"+company;
+                var mailMessage = new MailMessage();
+                mailMessage.From = new MailAddress("as1265513@gmail.com");
+                mailMessage.To.Add(new MailAddress(email));
+                mailMessage.Subject = subject;
+                mailMessage.Body = body;
+                mailMessage.IsBodyHtml = true;
+                using (var smtp = new SmtpClient())
+                {
+                    var credential = new NetworkCredential
+                    {
+                        UserName = "as1265513@gmail.com",
+                        Password = "qlfdaliohvbbltxu"
+                    };
+                    smtp.Credentials = credential;
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    smtp.Send(mailMessage);
+                }
+
+                object res = new
+                {
+                    message = "Password Sent to your Email.",
+                    status = 200
+                };
+                return Ok(res);
+            }
+            else
+            {
+                object res = new
+                {
+                    message = "Email Not Found.",
+                    status = 404
+                };
+                return NotFound(res);
+            }
+        }
+       [Authorize]
+       [HttpPut("updatePassword")]
+         public IActionResult UpdatePassword([FromBody] User value)
+         {
+                var user = dbContext.Users
+                        .Where(s => s.userName == value.userName)
+                        .FirstOrDefault();
+                if(user != null)
+                {
+                    bool comparePassword = BCryptNet.Verify(value.password, user.password);
+                    if (!comparePassword)
+                    {
+                        var res = new
+                        {
+                            message = "Invalid Password!",
+                            status = 400
+                        };
+                        return BadRequest(res);
+                    }
+                    else
+                    {
+                        user.password = BCryptNet.HashPassword(value.newPassword);
+                        dbContext.Users.Update(user);
+                        dbContext.SaveChanges();
+                        object res = new
+                        {
+                            message = "Password Updated Successfully.",
+                            status = 200
+                        };
+                        return Ok(res);
+                    }
+                }
+                else
+                {
+                    object res = new
+                    {
+                        message = "User Not found.",
+                        status = 404
+                    };
+                    return NotFound(res);
+                }
+         }
+       
+        [Authorize]
+        [HttpPut("updateProfile")]
+        public IActionResult UpdateProfile([FromForm] User value)
+        {
+            var user = dbContext.Users
+                       .Where(s => s.userName == value.userName)
+                       .FirstOrDefault();
+            if(user != null)
+            {
+                user.name = value.name;
+                user.email = value.email;
+                user.phone = value.phone;
+                dbContext.Users.Update(user);
+                dbContext.SaveChanges();
+                if(value.ProfilePicture != null)
+                {
+                      // Getting Image
+                    var file = value.ProfilePicture;
+
+                    //Getting FileName
+                    var fileName = Path.GetFileName(file.FileName);
+                    //Getting file Extension
+                    var fileExtension = Path.GetExtension(fileName);
+                    // concatenating  FileName + FileExtension
+                    var newFileName = String.Concat(Convert.ToString(Guid.NewGuid()), "Files", fileExtension);
+
+                    // Saving Image on Server
+                    if (file.Length > 0)
+                    {
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", newFileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+
+                            file.CopyTo(fileStream);
+                        }
+                        user.profilePic = newFileName;
+                        dbContext.Users.Update(user);
+                        dbContext.SaveChanges();
+                        
+                    }
+          
+                }
+                object res = new
+                {
+                    message = "Profile Updated Successfully.",
+                    status = 200
+                };
+                return Ok(res);
+            }
+            else
+            {
+                object res = new
+                {
+                    message = "User Not found.",
+                    status = 404
+                };
+                return NotFound(res);
+            }
+        }
+       
         private string generateJwtToken(User user)
         {
             // generate token that is valid for 7 days

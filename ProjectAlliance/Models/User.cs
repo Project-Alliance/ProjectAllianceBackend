@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
+
 namespace ProjectAlliance.Models
 {
     public class User
@@ -27,6 +29,10 @@ namespace ProjectAlliance.Models
         public string company { get; set; }
         [NotMapped]
         public string accessToken { get; set; }
+        [NotMapped]
+        public string newPassword { get; set; }
+        [NotMapped]
+        public IFormFile ProfilePicture { get; set; }
 
         public User()
         {
