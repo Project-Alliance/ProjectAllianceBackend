@@ -17,6 +17,52 @@ namespace ProjectAlliance.Migrations
                 .HasAnnotation("ProductVersion", "3.1.22")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("ProjectAlliance.Models.Comments", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("comId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("reqId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("text")
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("comments");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.CommentsReplies", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("comId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("parentCommentId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("text")
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("CommentsReplies");
+                });
+
             modelBuilder.Entity("ProjectAlliance.Models.Company", b =>
                 {
                     b.Property<int>("id")

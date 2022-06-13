@@ -45,6 +45,10 @@ namespace ProjectAlliance.Data
         public DbSet<TestCaseAttachment> TestCaseAttachment { get; set; }
 
 
+         public DbSet<Comments> comments { get; set; }
+        public DbSet<CommentsReplies> CommentsReplies { get; set; }
+
+
         public DbSet<RecevidMail> mail { get; set; }
         public DbSet<EmailAttachment> mailAttachments { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

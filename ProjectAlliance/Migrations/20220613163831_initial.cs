@@ -9,6 +9,38 @@ namespace ProjectAlliance.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "comments",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    comId = table.Column<string>(nullable: true),
+                    userId = table.Column<int>(nullable: false),
+                    reqId = table.Column<int>(nullable: false),
+                    text = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_comments", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CommentsReplies",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    userId = table.Column<int>(nullable: false),
+                    comId = table.Column<string>(nullable: true),
+                    text = table.Column<string>(nullable: true),
+                    parentCommentId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CommentsReplies", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Company",
                 columns: table => new
                 {
@@ -505,6 +537,12 @@ namespace ProjectAlliance.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "comments");
+
+            migrationBuilder.DropTable(
+                name: "CommentsReplies");
+
             migrationBuilder.DropTable(
                 name: "Company");
 

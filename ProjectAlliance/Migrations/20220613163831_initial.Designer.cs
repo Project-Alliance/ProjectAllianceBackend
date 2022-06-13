@@ -9,7 +9,7 @@ using ProjectAlliance.Data;
 namespace ProjectAlliance.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20220610073257_initial")]
+    [Migration("20220613163831_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,6 +18,52 @@ namespace ProjectAlliance.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.22")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("ProjectAlliance.Models.Comments", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("comId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("reqId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("text")
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("comments");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.CommentsReplies", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("comId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("parentCommentId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("text")
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("CommentsReplies");
+                });
 
             modelBuilder.Entity("ProjectAlliance.Models.Company", b =>
                 {

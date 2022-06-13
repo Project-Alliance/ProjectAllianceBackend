@@ -184,7 +184,7 @@ namespace ProjectAlliance.Controllers
                         role = user.role,
                         company= company.companyName,
                         permisions=Permisions,
-                        profilePic="http://localhost:5000/api/Document/FileAPI/"+user.profilePic
+                        profilePic=user.profilePic!=null?"http://localhost:5000/api/Document/FileAPI/"+user.profilePic:"https://ui-avatars.com/api/name="+user.name+"&background=random"
                     };
                    
                     return Ok(res);
@@ -305,10 +305,10 @@ namespace ProjectAlliance.Controllers
        
         [Authorize]
         [HttpPut("updateProfile")]
-        public IActionResult UpdateProfile([FromForm] User value)
+        public IActionResult UpdateProfile(string userName,[FromForm] User value)
         {
             var user = dbContext.Users
-                       .Where(s => s.userName == value.userName)
+                       .Where(s => s.userName == userName)
                        .FirstOrDefault();
             if(user != null)
             {
