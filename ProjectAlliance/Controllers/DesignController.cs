@@ -167,7 +167,7 @@ namespace ProjectAlliance.Controllers
                             {
                                 foreach(var attachment in attachments)
                                 {
-                                    attachmentsArray.Add(new { id=attachment.id,name = attachment.name, AttachmentExtension = attachment.AttachmentExtension, AttachmentPath = "http://localhost:5000/api/Document/FileAPI/"+attachment.AttachmentPath });
+                                    attachmentsArray.Add(new { id=attachment.id,name = attachment.name, AttachmentExtension = attachment.AttachmentExtension, AttachmentPath = "http://192.168.43.107:5005/api/Document/FileAPI/"+attachment.AttachmentPath });
                                 }
                             }
                             object reqObj = new { id = reqItem.id, Name = reqItem.Name, description = reqItem.Description, url = reqItem.url, attachments = attachmentsArray };

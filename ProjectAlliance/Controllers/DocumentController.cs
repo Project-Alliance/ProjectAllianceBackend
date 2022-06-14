@@ -241,7 +241,7 @@ namespace ProjectAlliance.Controllers
                          uploadBy=user.name,
                         uploadById = user.id,
                         documentVersion =DOC.documentVersion,
-                        filePath= "http://localhost:5000/api/Document/FileAPI/"+DOC.filePath,
+                        filePath= "http://192.168.43.107:5005/api/Document/FileAPI/"+DOC.filePath,
                         sectionId=DOC.sectionId,
                          projectId=DOC.projectId,
                         documentId=DOC.documentId,

@@ -128,7 +128,7 @@ namespace ProjectAlliance.Controllers
                                 }
                                 attachment.name = fileName;
                                 attachment.ext = newFileName;
-                                attachment.path = "http://localhost:5000/api/Document/FileAPI/"+newFileName;
+                                attachment.path = "http://192.168.43.107:5005/api/Document/FileAPI/"+newFileName;
                                 attachment.emailId = mail.id;
                                 dbContext.mailAttachments.Add(attachment);
 

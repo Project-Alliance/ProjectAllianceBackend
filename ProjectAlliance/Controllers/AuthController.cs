@@ -184,7 +184,7 @@ namespace ProjectAlliance.Controllers
                         role = user.role,
                         company= company.companyName,
                         permisions=Permisions,
-                        profilePic=user.profilePic!=null?"http://localhost:5000/api/Document/FileAPI/"+user.profilePic:"https://ui-avatars.com/api/name="+user.name+"&background=random"
+                        profilePic=user.profilePic!=null?"http://192.168.43.107:5005/api/Document/FileAPI/"+user.profilePic:"https://ui-avatars.com/api/name="+user.name+"&background=random"
                     };
                    
                     return Ok(res);

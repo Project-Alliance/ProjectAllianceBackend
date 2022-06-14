@@ -198,7 +198,7 @@ namespace ProjectAlliance.Controllers
                             foreach(var ra in resultAttachment){
                                 object obj1=new {
                                     ra.AttachmentExtension,
-                                    AttachmentPath= "http://localhost:5000/api/Document/FileAPI/" + ra.AttachmentPath,
+                                    AttachmentPath= "http://192.168.43.107:5005/api/Document/FileAPI/" + ra.AttachmentPath,
                                     ra.AtttachmentType,
                                     ra.id,
                                     ra.name
@@ -209,7 +209,7 @@ namespace ProjectAlliance.Controllers
                             foreach(var ra in resultAttachment2){
                                 object obj2=new {
                                     ra.AttachmentExtension,
-                                    AttachmentPath= "http://localhost:5000/api/Document/FileAPI/" + ra.AttachmentPath,
+                                    AttachmentPath= "http://192.168.43.107:5005/api/Document/FileAPI/" + ra.AttachmentPath,
                                     ra.AtttachmentType,
                                     ra.id,
                                     ra.name
