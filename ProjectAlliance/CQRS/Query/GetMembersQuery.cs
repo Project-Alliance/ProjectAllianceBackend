@@ -40,7 +40,9 @@ namespace ProjectAlliance.CQRS.Query
                                 name=member.name,
                                 email=member.email,
                                 role=member.role,
-                                member.userName,                                
+                                member.userName,   
+                                profilePic=member.profilePic!=null?"http://192.168.43.107:5005/api/Document/FileAPI/"+member.profilePic:"https://ui-avatars.com/api/name="+member.name+"&background=random"
+                            
 
                             };
                             data.Add(obj);
