@@ -184,6 +184,7 @@ namespace ProjectAlliance.Controllers
                         role = user.role,
                         company= company.companyName,
                         permisions=Permisions,
+                        companyId=user.companyId,   
                         profilePic=user.profilePic!=null?"http://192.168.43.107:5005/api/Document/FileAPI/"+user.profilePic:"https://ui-avatars.com/api/name="+user.name+"&background=random"
                     };
                    
@@ -345,11 +346,22 @@ namespace ProjectAlliance.Controllers
                     }
           
                 }
-                object res = new
-                {
-                    message = "Profile Updated Successfully.",
-                    status = 200
-                };
+                    string accessToken = _jwtTokenManager.Authenticate(user.userName,user.id,user.role);
+                    var company = dbContext.Company.Where(s => s.id == Convert.ToInt16(user.companyId)).FirstOrDefault();
+                    var Permisions = dbContext.permisions.Where(s => s.userId == user.id).ToList();
+                    var res = new {
+                        id=user.id,
+                        name=user.name,
+                        email=user.email,
+                        userName=user.userName,
+                        accessToken=accessToken,
+                        phone = user.phone,
+                        role = user.role,
+                        company= company.companyName,
+                        companyId=user.companyId,   
+                        permisions=Permisions,
+                        profilePic=user.profilePic!=null?"http://192.168.43.107:5005/api/Document/FileAPI/"+user.profilePic:"https://ui-avatars.com/api/name="+user.name+"&background=random"
+                    };
                 return Ok(res);
             }
             else
