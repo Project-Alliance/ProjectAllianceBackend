@@ -9,6 +9,39 @@ namespace ProjectAlliance.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "boardCard",
+                columns: table => new
+                {
+                    cid = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    lid = table.Column<string>(nullable: true),
+                    title = table.Column<string>(nullable: true),
+                    label = table.Column<string>(nullable: true),
+                    description = table.Column<string>(nullable: true),
+                    id = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_boardCard", x => x.cid);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "boardlane",
+                columns: table => new
+                {
+                    lid = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    projectId = table.Column<int>(nullable: false),
+                    title = table.Column<string>(nullable: true),
+                    label = table.Column<string>(nullable: true),
+                    id = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_boardlane", x => x.lid);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "comments",
                 columns: table => new
                 {
@@ -537,6 +570,12 @@ namespace ProjectAlliance.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "boardCard");
+
+            migrationBuilder.DropTable(
+                name: "boardlane");
+
             migrationBuilder.DropTable(
                 name: "comments");
 

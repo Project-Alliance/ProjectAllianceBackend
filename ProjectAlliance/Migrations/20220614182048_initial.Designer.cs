@@ -9,7 +9,7 @@ using ProjectAlliance.Data;
 namespace ProjectAlliance.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20220613163831_initial")]
+    [Migration("20220614182048_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,6 +18,55 @@ namespace ProjectAlliance.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.22")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("ProjectAlliance.Models.BoardCard", b =>
+                {
+                    b.Property<int>("cid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("label")
+                        .HasColumnType("text");
+
+                    b.Property<string>("lid")
+                        .HasColumnType("text");
+
+                    b.Property<string>("title")
+                        .HasColumnType("text");
+
+                    b.HasKey("cid");
+
+                    b.ToTable("boardCard");
+                });
+
+            modelBuilder.Entity("ProjectAlliance.Models.BoardLane", b =>
+                {
+                    b.Property<int>("lid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("label")
+                        .HasColumnType("text");
+
+                    b.Property<int>("projectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("title")
+                        .HasColumnType("text");
+
+                    b.HasKey("lid");
+
+                    b.ToTable("boardlane");
+                });
 
             modelBuilder.Entity("ProjectAlliance.Models.Comments", b =>
                 {

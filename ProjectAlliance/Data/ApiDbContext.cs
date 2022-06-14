@@ -47,6 +47,8 @@ namespace ProjectAlliance.Data
 
          public DbSet<Comments> comments { get; set; }
         public DbSet<CommentsReplies> CommentsReplies { get; set; }
+         public DbSet<BoardLane> boardlane { get; set; }
+        public DbSet<BoardCard> boardCard { get; set; }
 
 
         public DbSet<RecevidMail> mail { get; set; }
