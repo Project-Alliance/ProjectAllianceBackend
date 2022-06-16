@@ -102,7 +102,8 @@ namespace ProjectAlliance.Controllers
                             uid = teams.uid,
                             pid = teams.pid,
                             id=teams.id,
-                            membersData.userName
+                            membersData.userName,
+                            profilePic=membersData.profilePic!=null?"http://192.168.43.107:5005/api/Document/FileAPI/"+membersData.profilePic:"https://ui-avatars.com/api/name="+membersData.name+"&background=random"
 
                         };
                         team.Add(MemberData);
