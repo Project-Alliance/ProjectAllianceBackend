@@ -93,7 +93,7 @@ namespace ProjectAlliance.Controllers
         }
 
         // DELETE api/values/5
-        [HttpDelete("delete/{sid}")]
+        [HttpDelete("delete")]
         public async Task<IActionResult> Delete(int sid)
         {
             var sch = dbContext.Schedule.SingleOrDefault(s => s.id == sid);
@@ -107,3 +107,5 @@ namespace ProjectAlliance.Controllers
         }
     }
 }
+
+

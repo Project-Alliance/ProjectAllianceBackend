@@ -58,6 +58,76 @@ namespace ProjectAlliance.Controllers
             }
         }
         [Authorize]
+        [HttpPut("updateEnviorment")]
+        public async Task<IActionResult> Put(int id, [FromBody] Enviorment env)
+        {
+            if (ModelState.IsValid)
+            {
+                Enviorment enviorment = await dbContext.enviornment.FindAsync(id);
+                if (enviorment == null)
+                {
+                    return NotFound();
+                }
+                enviorment.Name = env.Name;
+                enviorment.Description = env.Description;
+                enviorment.summary = env.summary;
+                enviorment.TestType = env.TestType;
+                dbContext.enviornment.Update(enviorment);
+                await dbContext.SaveChangesAsync();
+                if (env.res != null)
+                {
+                    foreach (LabResource r in env.res)
+                    {
+                        r.EnvId = env.id;
+                        dbContext.labResource.Update(r);
+                    }
+                    await dbContext.SaveChangesAsync();
+                }
+                return Ok(enviorment);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("deleteEnviorment")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            Enviorment enviorment = await dbContext.enviornment.FindAsync(id);
+            if (enviorment == null)
+            {
+                return NotFound();
+            }
+            foreach (LabResource r in dbContext.labResource.Where(x => x.EnvId == id).ToList())
+            {
+                dbContext.labResource.Remove(r);
+            }
+            foreach(TestPlan t in dbContext.testPlan.Where(x => x.EnvId == id).ToList())
+            {
+                foreach(TestCases i in dbContext.testCases.Where(x => x.testPlanId == t.id).ToList())
+                {
+                    foreach(TestResult r in dbContext.testResult.Where(x => x.testId == i.id).ToList())
+                    {
+                        foreach(TestCaseAttachment d in dbContext.TestCaseAttachment.Where(x => x.testresultId == r.id).ToList())
+                        {
+                            dbContext.TestCaseAttachment.Remove(d);
+                        }
+                        dbContext.testResult.Remove(r);
+                    }
+                    dbContext.testCases.Remove(i);
+                }
+                dbContext.testPlan.Remove(t);
+            }
+            dbContext.enviornment.Remove(enviorment);
+            await dbContext.SaveChangesAsync();
+            return Ok(enviorment);
+        }
+
+        
+
+        [Authorize]
         [HttpPost("addTestPlan")]
        public async Task<IActionResult> Post(int envId, [FromBody] TestPlan plan)
         {
@@ -73,6 +143,58 @@ namespace ProjectAlliance.Controllers
                 return BadRequest(ModelState);
             }
         }
+        
+        
+        [Authorize]
+        [HttpPut("updateTestPlan")]
+
+        public async Task<IActionResult> Put(int id, [FromBody] TestPlan plan)
+        {
+            if (ModelState.IsValid)
+            {
+                TestPlan testPlan = await dbContext.testPlan.FindAsync(id);
+                if (testPlan == null)
+                {
+                    return NotFound();
+                }
+                testPlan.Name = plan.Name;
+                testPlan.Description = plan.Description;
+                dbContext.testPlan.Update(testPlan);
+                await dbContext.SaveChangesAsync();
+                return Ok(testPlan);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("deleteTestPlan")]
+        public async Task<IActionResult> DeleteA(int id)
+        {
+            TestPlan testPlan = await dbContext.testPlan.FindAsync(id);
+            if (testPlan == null)
+            {
+                return NotFound();
+            }
+            foreach (TestCases i in dbContext.testCases.Where(x => x.testPlanId == id).ToList())
+            {
+                foreach (TestResult r in dbContext.testResult.Where(x => x.testId == i.id).ToList())
+                {
+                    foreach (TestCaseAttachment d in dbContext.TestCaseAttachment.Where(x => x.testresultId == r.id).ToList())
+                    {
+                        dbContext.TestCaseAttachment.Remove(d);
+                    }
+                    dbContext.testResult.Remove(r);
+                }
+                dbContext.testCases.Remove(i);
+            }
+            dbContext.testPlan.Remove(testPlan);
+            await dbContext.SaveChangesAsync();
+            return Ok(testPlan);
+        }
+
         [Authorize]
         [HttpPost("addTestCase")]
         public async Task<IActionResult> Post(int testPlanId, [FromBody] TestCases test)
@@ -89,6 +211,55 @@ namespace ProjectAlliance.Controllers
                 return BadRequest(ModelState);
             }
         }
+
+        [Authorize]
+        [HttpPut("updateTestCase")]
+        public async Task<IActionResult> Put(int id, [FromBody] TestCases test)
+        {
+            if (ModelState.IsValid)
+            {
+                TestCases testCases = await dbContext.testCases.FindAsync(id);
+                if (testCases == null)
+                {
+                    return NotFound();
+                }
+                testCases.Name = test.Name;
+                testCases.categoryName = test.categoryName;
+                testCases.testType = test.testType;
+                testCases.categoryType = test.categoryType;
+                dbContext.testCases.Update(testCases);
+                await dbContext.SaveChangesAsync();
+                return Ok(testCases);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("deleteTestCase")]
+        public async Task<IActionResult> DeleteB(int id)
+        {
+            TestCases testCases = await dbContext.testCases.FindAsync(id);
+            if (testCases == null)
+            {
+                return NotFound();
+            }
+            foreach (TestResult r in dbContext.testResult.Where(x => x.testId == id).ToList())
+            {
+                foreach (TestCaseAttachment d in dbContext.TestCaseAttachment.Where(x => x.testresultId == r.id).ToList())
+                {
+                    dbContext.TestCaseAttachment.Remove(d);
+                }
+                dbContext.testResult.Remove(r);
+            }
+            dbContext.testCases.Remove(testCases);
+            await dbContext.SaveChangesAsync();
+            return Ok(testCases);
+        }
+
+
         [Authorize]
         [HttpPost("addTestResult")]
         public async Task<IActionResult> Post(int testCaseId, [FromForm] TestResult result)
@@ -170,7 +341,19 @@ namespace ProjectAlliance.Controllers
             }
         }
     
-
+        [Authorize]
+        [HttpPut("deleteTestResult")]
+        public async Task<IActionResult> DeleteR(int id)
+        {
+            TestResult testResult = await dbContext.testResult.FindAsync(id);
+            if (testResult == null)
+            {
+                return NotFound();
+            }
+            dbContext.testResult.Remove(testResult);
+            await dbContext.SaveChangesAsync();
+            return Ok(testResult);
+        }
 
         [Authorize]
         [HttpGet("getTestCases")]

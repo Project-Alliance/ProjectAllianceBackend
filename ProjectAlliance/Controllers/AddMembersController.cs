@@ -44,7 +44,7 @@ namespace ProjectAlliance.Controllers
             string userId = _jwtTokenManager.getUserId(claim);
             if (userId != null)
             {
-                var permision = dbContext.permisions.Where(s => s.userId == Convert.ToInt16(userId) && (s.permisionTitle == "superUser" || s.permisionTitle == "manageMembers")).SingleOrDefault();
+                var permision = dbContext.permisions.Where(s => s.userId == Convert.ToInt16(userId) && (s.permisionTitle == "superUser" || s.permisionTitle == "Moderator")).SingleOrDefault();
                 if (permision!=null&&permision.create)
                 {
                     if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -87,7 +87,7 @@ namespace ProjectAlliance.Controllers
             string userId = _jwtTokenManager.getUserId(claim);
             if (userId != null)
             {
-                var permision = dbContext.permisions.Where(s => s.userId == Convert.ToInt16(userId) && (s.permisionTitle == "superUser" || s.permisionTitle == "manageMembers")).SingleOrDefault();
+                var permision = dbContext.permisions.Where(s => s.userId == Convert.ToInt16(userId) && (s.permisionTitle == "superUser" || s.permisionTitle == "Moderator")).SingleOrDefault();
                 if (permision != null && permision.Delete)
                     return CustomResponse(await mediator.Send(new DeleteMemeberCommand { id = id }));
                     
@@ -110,7 +110,7 @@ namespace ProjectAlliance.Controllers
             string userId = _jwtTokenManager.getUserId(claim);
             if (userId != null)
             {
-                var permision = dbContext.permisions.Where(s => s.userId == Convert.ToInt16(userId) && (s.permisionTitle == "superUser" || s.permisionTitle == "manageMembers")).SingleOrDefault();
+                var permision = dbContext.permisions.Where(s => s.userId == Convert.ToInt16(userId) && (s.permisionTitle == "superUser" || s.permisionTitle == "Moderator")).SingleOrDefault();
                 if (permision != null && permision.read)
                    return CustomResponse(await mediator.Send(command));
                     
