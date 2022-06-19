@@ -56,48 +56,6 @@ namespace ProjectAlliance.Controllers
                 return BadRequest("unauthroized user");
             
         }
-        [Authorize]
-        [HttpPut("updateProject")]
-        public async Task<IActionResult> UpdateProject(int projectId,[FromBody] Project value)
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            IEnumerable<Claim> claim = identity.Claims;
-            string userId = _jwtTokenManage.getUserId(claim);
-            if (userId != null)
-            {
-                var permision = dbContext.permisions.Where(s => s.userId == Convert.ToInt16(userId) && (s.permisionTitle == "superUser" || s.permisionTitle == "manageProjects")).SingleOrDefault();
-                if (permision != null && permision.create)
-                {
-                   if(ModelState.IsValid)
-                   {
-                    var project = dbContext.Projects.Where(s=>s.pid==projectId).SingleOrDefault();
-                    if(project!=null)
-                    {
-                        project.projectDescription = value.projectDescription;
-                        project.ProjectTitle = value.ProjectTitle;
-                        project.startDate = value.startDate;
-                        project.endDate = value.endDate;
-                        project.status = value.status;
-                        dbContext.Projects.Update(project);
-                        await dbContext.SaveChangesAsync();
-                        return Ok(new {message = "successfully updated your Project "});
-
-                    }
-                    else{
-                        return BadRequest(new {message="No project found with this Id  "+ projectId });
-                    }
-                   }
-                   else {
-                    return BadRequest(ModelState);
-                   }
-                }
-                else return BadRequest(new { message = "You have not permision to do this Update Project" });
-            }
-            else
-                return BadRequest("unauthroized user");
-        }
-
-
 
         [Authorize]
         [HttpGet("get/{company}")]
@@ -221,6 +179,48 @@ namespace ProjectAlliance.Controllers
             }
             return BadRequest(new { messsage = "Team member not found" });
         }
+          [Authorize]
+        [HttpPut("updateProject")]
+        public async Task<IActionResult> UpdateProject(int projectId,[FromBody] Project value)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IEnumerable<Claim> claim = identity.Claims;
+            string userId = _jwtTokenManage.getUserId(claim);
+            if (userId != null)
+            {
+                var permision = dbContext.permisions.Where(s => s.userId == Convert.ToInt16(userId) && (s.permisionTitle == "superUser" || s.permisionTitle == "manageProjects")).SingleOrDefault();
+                if (permision != null && permision.create)
+                {
+                   if(ModelState.IsValid)
+                   {
+                    var project = dbContext.Projects.Where(s=>s.pid==projectId).SingleOrDefault();
+                    if(project!=null)
+                    {
+                        project.projectDescription = value.projectDescription;
+                        project.ProjectTitle = value.ProjectTitle;
+                        project.startDate = value.startDate;
+                        project.endDate = value.endDate;
+                        project.status = value.status;
+                        dbContext.Projects.Update(project);
+                        await dbContext.SaveChangesAsync();
+                        return Ok(new {message = "successfully updated your Project "});
+
+                    }
+                    else{
+                        return BadRequest(new {message="No project found with this Id  "+ projectId });
+                    }
+                   }
+                   else {
+                    return BadRequest(ModelState);
+                   }
+                }
+                else return BadRequest(new { message = "You have not permision to do this Update Project" });
+            }
+            else
+                return BadRequest("unauthroized user");
+        }
+
+
 
     }
 
