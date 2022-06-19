@@ -92,10 +92,6 @@ namespace ProjectAlliance
             {
                 endpoints.MapControllers();
             });
-            
-            
-           
-
         }
       
     }
