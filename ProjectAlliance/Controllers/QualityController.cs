@@ -78,7 +78,6 @@ namespace ProjectAlliance.Controllers
                 {
                     foreach (LabResource r in env.res)
                     {
-                        r.EnvId = env.id;
                         dbContext.labResource.Update(r);
                     }
                     await dbContext.SaveChangesAsync();
